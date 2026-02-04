@@ -34,7 +34,7 @@ public class Card {
 
     @Id
     @GeneratedValue
-    @Column (name="id")
+    @Column (name="id", nullable = false, unique = true)
     private UUID id;
 
     @NotBlank
@@ -44,7 +44,7 @@ public class Card {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name ="card", nullable = false)
+    @Column(name ="card_type", nullable = false)
     private CardType cardtype;
 
     @NotNull

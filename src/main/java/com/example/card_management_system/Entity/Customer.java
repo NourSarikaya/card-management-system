@@ -35,9 +35,18 @@ public class Customer {
 
     @NotBlank
     @Size(min = 2, max = 50)
-    @Column(name = "full_name", nullable = false)
-    private String name;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
+    @NotBlank
+    @Size(min = 2, max = 50)
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @NotBlank
+    @Size(max = 1)
+    @Column(name = "middle_initial")
+    private String middleInitial;
     @NotBlank
     @Email
     @Column(name = "email_address", nullable = false, unique = true)
@@ -63,8 +72,9 @@ public class Customer {
     private String cityName;
 
     @NotBlank
-    @Column(name = "state_name", nullable = false)
-    private String stateName;
+    @Size(min = 2, max = 2)
+    @Column(name = "state", nullable = false, length = 2)
+    private String state;
 
     @NotBlank
     @Column(name = "zip_code", nullable = false, length = 5)

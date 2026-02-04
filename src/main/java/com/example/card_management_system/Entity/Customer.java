@@ -30,23 +30,32 @@ public class Customer {
     @GeneratedValue
     private UUID customerId;
 
-    private String Name;
+    @Column(name = "full_name", nullable = false)
+    private String name;
 
+    @Column(name = "email_address", nullable = false, unique = true)
     private String emailAddress;
 
+    @Column(name = "phone_number", nullable = false, unique = true,  length = 15)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "phone_type")
     private PhoneType phoneType;
 
+    @Column(name = "address_line_1", nullable = false)
     private String addressLine1;
 
+    @Column(name = "address_line_2")
     private String addressLine2;
 
+    @Column(name = "city_name", nullable = false)
     private String cityName;
 
+    @Column(name = "state_name", nullable = false)
     private String stateName;
 
+    @Column(name = "zip_code", nullable = false, length = 5)
     private String zipcode;
 
 

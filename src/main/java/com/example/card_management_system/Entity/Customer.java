@@ -1,6 +1,9 @@
 package com.example.card_management_system.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,12 +33,17 @@ public class Customer {
     @GeneratedValue
     private UUID customerId;
 
+    @NotBlank
+    @Size(min = 2, max = 50)
     @Column(name = "full_name", nullable = false)
     private String name;
 
+    @NotBlank
+    @Email
     @Column(name = "email_address", nullable = false, unique = true)
     private String emailAddress;
 
+    @NotBlank
     @Column(name = "phone_number", nullable = false, unique = true,  length = 15)
     private String phoneNumber;
 
@@ -43,18 +51,22 @@ public class Customer {
     @Column(name = "phone_type")
     private PhoneType phoneType;
 
+    @NotBlank
     @Column(name = "address_line_1", nullable = false)
     private String addressLine1;
 
     @Column(name = "address_line_2")
     private String addressLine2;
 
+    @NotBlank
     @Column(name = "city_name", nullable = false)
     private String cityName;
 
+    @NotBlank
     @Column(name = "state_name", nullable = false)
     private String stateName;
 
+    @NotBlank
     @Column(name = "zip_code", nullable = false, length = 5)
     private String zipcode;
 

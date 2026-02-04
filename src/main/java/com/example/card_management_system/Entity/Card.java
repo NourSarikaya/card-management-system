@@ -1,9 +1,14 @@
 package com.example.card_management_system.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
+import org.hibernate.validator.constraints.CreditCardNumber;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 
@@ -27,30 +32,37 @@ public class Card {
         8. SecurityCode (CVV)(String) - 3-digit code on the back of the card
     */
 
-
     @Id
     @GeneratedValue
     @Column (name="id")
     private UUID id;
 
+    @NotBlank
+    @CreditCardNumber
     @Column(name = "card_number", nullable = false, unique = true, length = 16)
     private String cardNumber;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name ="card", nullable = false)
     private CardType cardtype;
 
+    @NotNull
     @Column(name = "expiry_date", nullable = false, length = 6)
-    private String expiryDate; //YYYYMM
+    private LocalDate expiryDate; //YYYYMM
 
+    @NotBlank
     @Column(name = "card_holder_name", nullable = false)
     private String cardHolderName;
 
-    private boolean isActive;
+    private boolean active;
 
+    @NotNull
+    @PositiveOrZero
     @Column(name = "credit_limit", nullable = false, precision = 15, scale = 2)
     private BigDecimal creditLimit;
 
+    @NotBlank(message = "CVV must be 3 digits")
     @Column(name = "security_code", nullable = false, length = 3)
     private String securityCode;
 

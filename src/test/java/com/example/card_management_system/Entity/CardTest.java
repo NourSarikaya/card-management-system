@@ -11,18 +11,18 @@ class CardTest {
     @Test
     void setCreditLimit() {
 
-        Card c = new Card();
-        c.setCreditLimit(20.0);
-        assertEquals(20.0,c.getCreditLimit());
+        Card card = new Card();
+        card.setCreditLimit(20.0);
+        assertEquals(20.0,card.getCreditLimit());
 
     }
 
     @Test
     void setIsActive() {
 
-        Card c = new Card();
-        c.setActive(true);
-        assertTrue(c.isActive());
+        Card card = new Card();
+        card.setActive(true);
+        assertTrue(card.isActive());
 
     }
 

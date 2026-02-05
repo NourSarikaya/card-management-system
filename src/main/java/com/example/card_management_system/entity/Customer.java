@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Table(name="customer")
 @Getter
 @Setter
+@NoArgsConstructor(access= AccessLevel.PROTECTED, force = true)
 public class Customer {
     /*
         1.	customerID(UUID): Unique Identifier for each card
@@ -79,6 +82,20 @@ public class Customer {
     @NotBlank
     @Column(name = "zip_code", nullable = false, length = 5)
     private String zipcode;
+
+    public Customer(String firstName, String lastName, String middleInitial, String emailAddress, String phoneNumber, PhoneType phoneType, String addressLine1, String addressLine2, String cityName, String state, String zipcode) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleInitial = middleInitial;
+        this.emailAddress = emailAddress;
+        this.phoneNumber = phoneNumber;
+        this.phoneType = phoneType;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.cityName = cityName;
+        this.state = state;
+        this.zipcode = zipcode;
+    }
 
 
     //CARD TYPE ENUM

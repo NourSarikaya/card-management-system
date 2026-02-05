@@ -1,4 +1,4 @@
-package com.example.card_management_system.Entity;
+package com.example.card_management_system.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

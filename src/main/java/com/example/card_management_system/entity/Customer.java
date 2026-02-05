@@ -50,6 +50,7 @@ public class Customer {
     @Size(max = 1)
     @Column(name = "middle_initial")
     private String middleInitial;
+
     @NotBlank
     @Email
     @Column(name = "email_address", nullable = false, unique = true)

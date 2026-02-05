@@ -40,7 +40,7 @@ class CardRepositoryTest {
                 "60606");
 
         testCard =new Card(//cardId,
-                "1234567891234567",
+                "6011111111111117",
                 CardType.CREDIT,
                 LocalDate.of(2026, 2, 7),
                 "card holder name",true,
@@ -66,26 +66,26 @@ class CardRepositoryTest {
         assertEquals(testCard.getCreditLimit(), savedCard.getCreditLimit());
     }
 
-//    @Test
-//    void givenCard_whenFindByCustomerIdCalled_thenCardIsFound() {
-//
-//        //Save another card for the same customer
-//        UUID cardId_2=UUID.randomUUID();
-//        Card testCard_2 = new Card(//cardId_2,
-//                "2234567891234567", CardType.CREDIT,
-//                LocalDate.of(2026, 2, 7),
-//                "card holder name", true,
-//                BigDecimal.valueOf(2000.00), "234", testCustomer);
-//        cardRepository.save(testCard_2);
-//
-//
-//        List<Card> cards = cardRepository.findByCustomer_CustomerId(testCustomer.getCustomerId());
-//
-//
-//        assertThat(cards).isNotEmpty();
-//        assertThat(cards).hasSize(2);
-//        assertThat(cards).containsExactlyInAnyOrder(testCard, testCard_2);
-//    }
+    @Test
+    void givenCard_whenFindByCustomerIdCalled_thenCardIsFound(){
+
+        //Save another card for the same customer
+        UUID cardId_2=UUID.randomUUID();
+        Card testCard_2 = new Card(//cardId_2,
+                "4111111111111111", CardType.CREDIT,
+                LocalDate.of(2026, 2, 7),
+                "card holder name", true,
+                BigDecimal.valueOf(2000.00), "234", testCustomer);
+        cardRepository.save(testCard_2);
+
+
+        List<Card> cards = cardRepository.findByCustomer_CustomerId(testCustomer.getCustomerId());
+
+
+        assertThat(cards).isNotEmpty();
+        assertThat(cards).hasSize(2);
+        assertThat(cards).containsExactlyInAnyOrder(testCard, testCard_2);
+    }
 
     @Test
     void givenCard_whenDeleted_thenCanNotBeFoundByCardId() {

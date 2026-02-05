@@ -6,12 +6,14 @@ import com.example.card_management_system.entity.Customer;
 import com.example.card_management_system.repository.CardRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,21 +48,35 @@ class CardServiceTest {
         9. customer(Customer)-Representing the customer this card belongs to
         */
         UUID cardId=UUID.randomUUID();
-        UUID customerId=UUID.randomUUID();
 
-        Card toCreate =new Card(null,"1234567891234567", CardType.CREDIT , LocalDate.of(2026,02,04), "card holder name",true, BigDecimal.valueOf(2000.00),"234", customer);
 
-        Card created =new Card(cardId,"1234567891234567", CardType.CREDIT, LocalDate.of(2026,02,04), "card holder name",true, BigDecimal.valueOf(2000.00),"234", customer);
+        Card request =new Card(cardId,"1234567891234567", CardType.CREDIT, LocalDate.of(2026, 2, 4), "card holder name",true, BigDecimal.valueOf(2000.00),"234", customer);
 
-        when(cardRepository.save(any(Card.class))).thenReturn(created);
 
-        Card result = cardService.createCard(toCreate);
+
+        when(cardRepository.save(any(Card.class))).thenAnswer(invocation -> {
+            Card c = invocation.getArgument(0);
+            return new Card(cardId,c.getCardNumber(), c.getCardtype(), c.getExpiryDate(), c.getCardHolderName(),c.isActive(), c.getCreditLimit(),c.getSecurityCode(), c.getCustomer());
+        });
+
+        ArgumentCaptor<Card> captor = ArgumentCaptor.forClass(Card.class);
+
+        Card result = cardService.createCard(request);
+
         assertThat(result.getId()).isEqualTo(cardId);
 
-        verify(cardRepository).save(toCreate);
+        verify(cardRepository).save(captor.capture());
 
+
+
+        Card sendToRepo =captor.getValue();
+
+        assertThat(sendToRepo.getCardNumber()).isEqualTo("1234567891234567");
+        assertThat(sendToRepo.getCardtype()).isEqualTo(CardType.CREDIT);
+        assertThat(sendToRepo.getCardHolderName()).isEqualTo("card holder name");
+        assertThat(sendToRepo.getExpiryDate()).isEqualTo(LocalDate.of(2026, 2, 4));
+        assertThat(sendToRepo.getCustomer()).isEqualTo(customer);
 
     }
-
 
 };

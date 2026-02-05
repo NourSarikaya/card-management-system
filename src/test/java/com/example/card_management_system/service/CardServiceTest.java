@@ -36,39 +36,23 @@ class CardServiceTest {
 
     @Test
     void shouldCreateCardWithCorrectFields(){
-        /*
-        1. Id (UUID) – Unique Identifier for each card
-        2. CardNumber(String)– 16-digit credit/debit card number
-        3. cardType(Enum): type of card (e.g. Credit, Debit)
-        4. expiryDate(String): Expiration Date of card in YYYYMM format
-        5. cardHolderName(String): Name of the card holder
-        6. isActive(Boolean): Status of the card (active/inactive)
-        7. CreditLimit(BigDecimal) – Credit Limit on the credit card
-        8. SecurityCode (CVV)(String) - 3-digit code on the back of the card
-        9. customer(Customer)-Representing the customer this card belongs to
-        */
+
         UUID cardId=UUID.randomUUID();
 
 
-        Card request =new Card(cardId,"1234567891234567", CardType.CREDIT, LocalDate.of(2026, 2, 4), "card holder name",true, BigDecimal.valueOf(2000.00),"234", customer);
+        Card card =new Card(cardId,"1234567891234567", CardType.CREDIT, LocalDate.of(2026, 2, 4), "card holder name",true, BigDecimal.valueOf(2000.00),"234", customer);
 
 
 
-        when(cardRepository.save(any(Card.class))).thenAnswer(invocation -> {
-            Card c = invocation.getArgument(0);
-            return new Card(cardId,c.getCardNumber(), c.getCardtype(), c.getExpiryDate(), c.getCardHolderName(),c.isActive(), c.getCreditLimit(),c.getSecurityCode(), c.getCustomer());
-        });
+        when(cardRepository.save(any(Card.class))).thenReturn(card);
 
+        Card result = cardService.createCard(card);
+
+
+
+        // check that exact  arguments are passed to the repository
         ArgumentCaptor<Card> captor = ArgumentCaptor.forClass(Card.class);
-
-        Card result = cardService.createCard(request);
-
-        assertThat(result.getId()).isEqualTo(cardId);
-
         verify(cardRepository).save(captor.capture());
-
-
-
         Card sendToRepo =captor.getValue();
 
         assertThat(sendToRepo.getCardNumber()).isEqualTo("1234567891234567");

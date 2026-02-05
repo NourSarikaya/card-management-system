@@ -18,7 +18,7 @@ public class CardService {
     public Card createCard(Card card){
         return cardRepository.save(card);
     }
-
+    //TO DO: instead of passing card entity pass DTO as argument
 
 
     public List<Card> getCardsByCustomerId(Card card){

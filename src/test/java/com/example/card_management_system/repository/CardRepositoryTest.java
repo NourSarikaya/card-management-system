@@ -33,18 +33,18 @@ class CardRepositoryTest {
     @BeforeEach
     public void setUp() {
         // Initialize test data before each test method
-        UUID cardId=UUID.randomUUID();
-        testCustomer = new Customer("firstname","lastname",
-                "E", "nnn@gmail.com","123123123121332",
-                Customer.PhoneType.MOBILE, "Street","apt","chi","IL",
+        UUID cardId = UUID.randomUUID();
+        testCustomer = new Customer("firstname", "lastname",
+                "E", "nnn@gmail.com", "123123123121332",
+                Customer.PhoneType.MOBILE, "Street", "apt", "chi", "IL",
                 "60606");
 
-        testCard =new Card(//cardId,
+        testCard = new Card(//cardId,
                 "6011111111111117",
                 CardType.CREDIT,
                 LocalDate.of(2026, 2, 7),
-                "card holder name",true,
-                BigDecimal.valueOf(2000.00),"234", testCustomer);
+                "card holder name", true,
+                BigDecimal.valueOf(2000.00), "234", testCustomer);
 
         customerRepository.save(testCustomer);
         cardRepository.save(testCard);
@@ -67,10 +67,10 @@ class CardRepositoryTest {
     }
 
     @Test
-    void givenCard_whenFindByCustomerIdCalled_thenCardIsFound(){
+    void givenCard_whenFindByCustomerIdCalled_thenCardIsFound() {
 
         //Save another card for the same customer
-        UUID cardId_2=UUID.randomUUID();
+        UUID cardId_2 = UUID.randomUUID();
         Card testCard_2 = new Card(//cardId_2,
                 "4111111111111111", CardType.CREDIT,
                 LocalDate.of(2026, 2, 7),
@@ -106,8 +106,6 @@ class CardRepositoryTest {
         assertNotNull(updatedCard);
         assertEquals(testCard.getCreditLimit(), updatedCard.getCreditLimit());
     }
-
-
 
 
 }

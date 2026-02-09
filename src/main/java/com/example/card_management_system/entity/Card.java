@@ -20,6 +20,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access= AccessLevel.PROTECTED, force = true)
+@Builder
 public class Card {
     /*
         1. Id (UUID) – Unique Identifier for each card

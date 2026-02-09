@@ -15,7 +15,7 @@ import java.util.UUID;
 @Table(name="customer")
 @Getter
 @Setter
-@NoArgsConstructor(access= AccessLevel.PROTECTED, force = true)
+@NoArgsConstructor(access= AccessLevel.PUBLIC, force = true)
 public class Customer {
     /*
         1.	customerID(UUID): Unique Identifier for each card

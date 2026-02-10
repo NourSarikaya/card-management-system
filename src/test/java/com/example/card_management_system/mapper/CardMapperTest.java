@@ -1,6 +1,7 @@
 package com.example.card_management_system.mapper;
 
 import com.example.card_management_system.dto.CardResponseDTO;
+import com.example.card_management_system.dto.CardUpdateDTO;
 import com.example.card_management_system.dto.CreateCardRequestDTO;
 import com.example.card_management_system.entity.Card;
 import com.example.card_management_system.entity.Customer;
@@ -67,12 +68,41 @@ public class CardMapperTest {
         Card result = cardMapper.requestDtoToCard(createCardRequestDTO);
 
         assertThat(result.getCardNumber()).isEqualTo(createCardRequestDTO.getCardNumber());
-        assertThat(result.getCardType()).isEqualTo(Card.CardType.valueOf(createCardRequestDTO.getCardType().toUpperCase()));
+        assertThat(result.getCardType()).isEqualTo(Card.CardType.valueOf(createCardRequestDTO.getCardType()
+                                                                                             .toUpperCase()));
         assertThat(result.getCardNumber()).isEqualTo(createCardRequestDTO.getCardNumber());
-        assertThat(result.getExpiryDate()).isEqualTo(LocalDate.of(2029,12,31));
+        assertThat(result.getExpiryDate()).isEqualTo(LocalDate.of(2029, 12, 31));
         assertThat(result.getCardHolderName()).isEqualTo(createCardRequestDTO.getCardHolderName());
         assertThat(result.getCreditLimit()).isEqualTo(createCardRequestDTO.getCreditLimit());
-        assertThat(result.getCustomer().getCustomerId()).isEqualTo(UUIDUtils.toUUID(createCardRequestDTO.getCustomerId()));
+        assertThat(result.getCustomer()
+                         .getCustomerId()).isEqualTo(UUIDUtils.toUUID(createCardRequestDTO.getCustomerId()));
+    }
+
+    @Test
+    void givenValidCardUpdateRequest_whenUpdateCardCalled_thenOnlySpecificFieldsAreUpdated() {
+        Card existingCard = Card.builder()
+                                .cardNumber("1234123412341234")
+                                .securityCode("123")
+                                .creditLimit(BigDecimal.valueOf(1000.00))
+                                .active(true)
+                                .expiryDate(LocalDate.of(2027, 1, 1))
+                                .build();
+
+        CardUpdateDTO cardUpdateDTO = CardUpdateDTO.builder()
+                                                   .creditLimit(BigDecimal.valueOf(2000.00).toString())
+                                                   .active("false")
+                                                   .expiryDate("202812")
+                                                   .build();
+
+        cardMapper.updateCardFromDto(cardUpdateDTO, existingCard);
+
+        assertThat(BigDecimal.valueOf(2000.00)).isEqualTo(existingCard.getCreditLimit());
+        assertThat(existingCard.isActive()).isFalse();
+        assertThat(LocalDate.of(2028, 12, 31)).isEqualTo(existingCard.getExpiryDate());
+
+        // Assert immutable fields that are not updated
+        assertThat("1234123412341234").isEqualTo(existingCard.getCardNumber());
+        assertThat("123").isEqualTo(existingCard.getSecurityCode());
     }
 
 }

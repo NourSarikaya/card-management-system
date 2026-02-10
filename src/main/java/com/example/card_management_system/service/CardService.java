@@ -1,6 +1,7 @@
 package com.example.card_management_system.service;
 
 import com.example.card_management_system.dto.CardResponseDTO;
+import com.example.card_management_system.dto.CardUpdateDTO;
 import com.example.card_management_system.dto.CreateCardRequestDTO;
 import com.example.card_management_system.entity.Card;
 import com.example.card_management_system.mapper.CardMapper;
@@ -18,11 +19,11 @@ public class CardService {
     private CardRepository cardRepository;
     private CardMapper cardMapper;
 
-    public CardResponseDTO getCardById(String id) {
-        UUID cardId = (UUIDUtils.toUUID(id));
+    public CardResponseDTO getCardById(String accountId) {
+        UUID cardId = (UUIDUtils.toUUID(accountId));
 
         Card card = cardRepository.findById(cardId)
-                                  .orElseThrow(() -> new EntityNotFoundException("Card not found with ID: " + id));
+                                  .orElseThrow(() -> new EntityNotFoundException("Card not found with ID: " + accountId));
 
         return cardMapper.cardToResponseDto(card);
     }
@@ -44,6 +45,22 @@ public class CardService {
         }
 
     }
+
+    public CardResponseDTO updateCard(UUID accountId, CardUpdateDTO cardUpdateDTO) {
+        try {
+            Card existingCard = cardRepository.findById(accountId)
+                                              .orElseThrow(() -> new RuntimeException("Card not found with ID: " + accountId));
+
+            cardMapper.updateCardFromDto(cardUpdateDTO, existingCard);
+
+            Card updatedCard = cardRepository.save(existingCard);
+
+            return cardMapper.cardToResponseDto(updatedCard);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Failed to update card: " + e.getMessage());
+        }
+    }
+
 
     private String generateSecurityCode() {
         SecureRandom secureRandom = new SecureRandom();

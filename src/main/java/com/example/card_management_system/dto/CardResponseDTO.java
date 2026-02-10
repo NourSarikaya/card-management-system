@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CardResponseDTO {
 
-    private String id; //UUID??
+    private String id; //accountId
     private String cardNumber;
     private String cardType;
     private String expiryDate;
     private String cardHolderName;
-    private boolean active;
+    private String active; //String
     private String creditLimit; //BigDecimal??
     private String securityCode;
 }

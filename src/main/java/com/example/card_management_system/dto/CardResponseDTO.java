@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CardResponseDTO {
 
-    private String id; //UUID??
+    private String accountId; //UUID??
     private String cardNumber;
     private String cardType;
     private String expiryDate;
     private String cardHolderName;
-    private boolean active;
+    private String active;
     private String creditLimit; //BigDecimal??
     private String securityCode;
     private String customerId;

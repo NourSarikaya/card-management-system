@@ -31,6 +31,6 @@ public class CreateCustomerRequestDTO {
     @Size(min = 2, max=2)
     private String state;
     @NotBlank(message = "zipCode is required")
-    @Size(min = 6, max=6)
+    @Size(min = 5, max=5)
     private String zipCode;
 }

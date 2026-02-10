@@ -60,7 +60,7 @@ class CardRepositoryTest {
 
     @Test
     void givenCard_whenSaved_thenCanBeFoundByCardId() {
-        Card savedCard = cardRepository.findById(testCard.getId()).orElse(null);
+        Card savedCard = cardRepository.findById(testCard.getAccountId()).orElse(null);
         assertNotNull(savedCard);
         assertEquals(testCard.getCardHolderName(), savedCard.getCardHolderName());
         assertEquals(testCard.getCreditLimit(), savedCard.getCreditLimit());
@@ -89,11 +89,11 @@ class CardRepositoryTest {
 
     @Test
     void givenCard_whenDeleted_thenCanNotBeFoundByCardId() {
-        assertThat(testCard.getId()).isNotNull();
+        assertThat(testCard.getAccountId()).isNotNull();
 
         //Deleting Card
-        cardRepository.deleteById(testCard.getId());
-        assertThat(cardRepository.findById(testCard.getId())).isEmpty();
+        cardRepository.deleteById(testCard.getAccountId());
+        assertThat(cardRepository.findById(testCard.getAccountId())).isEmpty();
     }
 
     @Test
@@ -102,7 +102,7 @@ class CardRepositoryTest {
         testCard.setCreditLimit(BigDecimal.valueOf(4000.00));
         cardRepository.save(testCard);
 
-        Card updatedCard = cardRepository.findById(testCard.getId()).orElse(null);
+        Card updatedCard = cardRepository.findById(testCard.getAccountId()).orElse(null);
         assertNotNull(updatedCard);
         assertEquals(testCard.getCreditLimit(), updatedCard.getCreditLimit());
     }

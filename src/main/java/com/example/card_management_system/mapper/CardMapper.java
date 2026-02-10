@@ -1,27 +1,42 @@
 package com.example.card_management_system.mapper;
 
 import com.example.card_management_system.dto.CardResponseDTO;
+import com.example.card_management_system.dto.CreateCardRequestDTO;
 import com.example.card_management_system.entity.Card;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
-@Component
-public class CardMapper {
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
-    public CardResponseDTO cardToResponseDto(Card card) {
-        if (card == null) return null;
+@Mapper(componentModel = "spring")
+public interface CardMapper {
 
-        return CardResponseDTO.builder()
-                              .id(card.getId().toString())
-                              .cardNumber(card.getCardNumber())
-                              .cardType(card.getCardtype().toString())
-                              .expiryDate(card.getExpiryDate().toString())
-                              .cardHolderName(card.getCardHolderName())
-                              .active(card.isActive())
-                              .creditLimit(card.getCreditLimit() != null ? card.getCreditLimit().toString() : null)
-                              .securityCode(card.getSecurityCode())
-                              .customerId(card.getCustomer().getCustomerId().toString())
-                              .build();
+    @Mappings({
+            @Mapping(source = "customer.customerId", target = "customerId"),
+            @Mapping(target = "expiryDate", dateFormat = "yyyyMM")
 
+    })
+    CardResponseDTO cardToResponseDto(Card card);
+
+    @Mappings({
+        @Mapping(target = "expiryDate", expression = "java(mapStringToLastDay(dto.getExpiryDate()))"),
+        @Mapping(target = "customer.customerId", source = "customerId")
+    })
+    Card requestDtoToCard(CreateCardRequestDTO dto);
+
+    default LocalDate mapStringToLastDay(String expiryDate) {
+        if (expiryDate == null || expiryDate.isBlank()) {
+            return null;
+        }
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+            return YearMonth.parse(expiryDate, formatter).atEndOfMonth();
+        } catch (DateTimeParseException e) {
+            throw new RuntimeException("Invalid expiry date format. Expected yyyyMM: " + expiryDate);
+        }
     }
-
 }

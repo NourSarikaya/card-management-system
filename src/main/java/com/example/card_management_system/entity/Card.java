@@ -19,7 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor(access= AccessLevel.PROTECTED, force = true)
+@NoArgsConstructor(access= AccessLevel.PUBLIC, force = true)
 @Builder
 public class Card {
     /*
@@ -36,7 +36,7 @@ public class Card {
     @Id
     @GeneratedValue
     @Column (name="id", nullable = false, unique = true)
-    private UUID id;
+    private UUID accountId;
 
     @NotBlank
     @CreditCardNumber
@@ -46,7 +46,7 @@ public class Card {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name ="card_type", nullable = false)
-    private CardType cardtype;
+    private CardType cardType;
 
     @NotNull
     @Column(name = "expiry_date", nullable = false, length = 6)
@@ -71,9 +71,9 @@ public class Card {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    public Card(String cardNumber, CardType cardtype, LocalDate expiryDate, String cardHolderName, boolean active, BigDecimal creditLimit, String securityCode, Customer customer) {
+    public Card(String cardNumber, CardType cardType, LocalDate expiryDate, String cardHolderName, boolean active, BigDecimal creditLimit, String securityCode, Customer customer) {
         this.cardNumber = cardNumber;
-        this.cardtype = cardtype;
+        this.cardType = cardType;
         this.expiryDate = expiryDate;
         this.cardHolderName = cardHolderName;
         this.active = active;

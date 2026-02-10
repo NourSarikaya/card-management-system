@@ -1,12 +1,14 @@
 package com.example.card_management_system.service;
 
 import com.example.card_management_system.dto.CardResponseDTO;
+import com.example.card_management_system.dto.CreateCardRequestDTO;
 import com.example.card_management_system.entity.Card;
 import com.example.card_management_system.mapper.CardMapper;
 import com.example.card_management_system.repository.CardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,8 +37,8 @@ public class CardServiceTest {
         String cardIdString = "561eed14-b0e4-45ec-9e6f-dc5b4238ee57";
         UUID uuid = UUID.fromString("561eed14-b0e4-45ec-9e6f-dc5b4238ee57");
 
-        Card card = Card.builder().id(uuid).build();
-        CardResponseDTO cardResponseDTO = CardResponseDTO.builder().id(cardIdString).build();
+        Card card = Card.builder().accountId(uuid).build();
+        CardResponseDTO cardResponseDTO = CardResponseDTO.builder().accountId(cardIdString).build();
 
         when(cardRepository.findById(uuid)).thenReturn(Optional.of(card));
         when(cardMapper.cardToResponseDto(card)).thenReturn(cardResponseDTO);
@@ -44,7 +46,7 @@ public class CardServiceTest {
         CardResponseDTO result = cardService.getCardById(cardIdString);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(cardIdString);
+        assertThat(result.getAccountId()).isEqualTo(cardIdString);
 
         verify(cardRepository, times(1)).findById(uuid);
         verify(cardMapper, times(1)).cardToResponseDto(card);
@@ -58,12 +60,59 @@ public class CardServiceTest {
         when(cardRepository.findById(uuid)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
-           cardService.getCardById(cardIdString);
+            cardService.getCardById(cardIdString);
         });
 
         assertThat(exception.getMessage()).isEqualTo("Card not found with ID: " + cardIdString);
 
         verify(cardRepository, times(1)).findById(uuid);
         verifyNoInteractions(cardMapper);
+    }
+
+    @Test
+    void givenValidCardRequestDto_whenCreateNewCard_thenReturnCardResponseDto() {
+        CreateCardRequestDTO request = CreateCardRequestDTO.builder().cardNumber("1234123412341234").build();
+
+        Card mappedCard = new Card();
+        Card savedCard = new Card();
+        CardResponseDTO expectedResponse = new CardResponseDTO();
+
+        when(cardMapper.requestDtoToCard(any())).thenReturn(mappedCard);
+        when(cardRepository.save(any())).thenReturn(savedCard);
+        when(cardMapper.cardToResponseDto(any())).thenReturn(expectedResponse);
+
+        CardResponseDTO result = cardService.createNewCard(request);
+
+        assertThat(result).isNotNull();
+
+        ArgumentCaptor<Card> cardCaptor = ArgumentCaptor.forClass(Card.class);
+        verify(cardRepository).save(cardCaptor.capture());
+
+        Card capturedCard = cardCaptor.getValue();
+
+        assertThat(capturedCard.getAccountId()).isNotNull();
+        assertThat(capturedCard.getSecurityCode()).hasSize(3);
+        assertThat(capturedCard.isActive()).isTrue();
+    }
+
+    @Test
+    void givenInvalidCardRequestDto_whenCreateNewCardCalled_thenThrowsException() {
+        String invalidDate = "2026-02";
+        String mapperErrorMessage = "Invalid expiry date format. Expected yyyyMM: " + invalidDate;
+
+        CreateCardRequestDTO request = CreateCardRequestDTO.builder().expiryDate(invalidDate).build();
+
+        when(cardMapper.requestDtoToCard(any())).thenThrow(new RuntimeException(mapperErrorMessage));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            cardService.createNewCard(request);
+        });
+
+        assertThat(exception.getMessage()).contains("Failed to process card request");
+        assertThat(exception.getMessage()).contains(mapperErrorMessage);
+
+        verify(cardRepository, never()).save(any());
+        verifyNoInteractions(cardRepository);
+
     }
 }

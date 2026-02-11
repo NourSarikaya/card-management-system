@@ -35,15 +35,9 @@ public class CardService {
 
     public CardResponseDTO createNewCard(CreateCardRequestDTO cardRequestDTO) {
         try {
-//            UUID customerId = UUID.fromString(cardRequestDTO.getCustomerId());
-//
-//            if (!customerRepository.existsById(customerId)) {
-//                throw new EntityNotFoundException("Customer not found: " + cardRequestDTO.getCustomerId());
-//            }
 
             Card newCard = cardMapper.requestDtoToCard(cardRequestDTO);
 
-            //newCard.setAccountId(null);
             newCard.setAccountId(UUID.randomUUID());
             newCard.setActive(true);
             newCard.setSecurityCode(generateSecurityCode());

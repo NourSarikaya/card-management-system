@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public String handleDataIntegrityViolation(DataIntegrityViolationException ex) {
 
-        return "Duplicate or invalid data";
+        return ex.getMessage();
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -37,12 +37,11 @@ public class GlobalExceptionHandler {
         return ex.getBindingResult().getFieldErrors().stream()
                 .map(err-> err.getField() + ": " + err.getDefaultMessage()).toList();
     }
-    
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleOtherExceptions(Exception ex) {
-        return "An unexpected error occurred";
+        return ex.getMessage();
     }
-
 
 }

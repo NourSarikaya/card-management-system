@@ -46,9 +46,10 @@ public class CardService {
 
     }
 
-    public CardResponseDTO updateCard(UUID accountId, CardUpdateDTO cardUpdateDTO) {
+    public CardResponseDTO updateCard(String accountId, CardUpdateDTO cardUpdateDTO) {
         try {
-            Card existingCard = cardRepository.findById(accountId)
+            UUID cardId = (UUIDUtils.toUUID(accountId));
+            Card existingCard = cardRepository.findById(cardId)
                                               .orElseThrow(() -> new RuntimeException("Card not found with ID: " + accountId));
 
             cardMapper.updateCardFromDto(cardUpdateDTO, existingCard);

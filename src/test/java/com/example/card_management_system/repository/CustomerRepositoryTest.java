@@ -25,10 +25,21 @@ class CustomerRepositoryTest {
     @BeforeEach
     public void setUp() {
         // Initialize test data before each test method
-        testCustomer = new Customer("firstname","lastname",
-                "E", "nnn@gmail.com","123123123121332",
-                Customer.PhoneType.MOBILE, "Street","apt","chi","IL",
-                "60606");
+        UUID customerId = UUID.randomUUID();
+        testCustomer = Customer.builder()
+                .customerId(customerId)
+                .firstName("firstname")
+                .lastName("lastname")
+                .middleInitial("E")
+                .emailAddress("nnn@gmail.com")
+                .phoneNumber("123123123121332")
+                .phoneType(Customer.PhoneType.MOBILE)
+                .addressLine1("Street")
+                .addressLine2("apt")
+                .cityName("chi")
+                .state("IL")
+                .zipcode("60606")
+                .build();
 
         customerRepository.save(testCustomer);
     }

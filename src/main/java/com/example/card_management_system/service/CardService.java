@@ -6,18 +6,23 @@ import com.example.card_management_system.dto.CreateCardRequestDTO;
 import com.example.card_management_system.entity.Card;
 import com.example.card_management_system.mapper.CardMapper;
 import com.example.card_management_system.repository.CardRepository;
+import com.example.card_management_system.repository.CustomerRepository;
 import com.example.card_management_system.util.UUIDUtils;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CardService {
 
-    private CardRepository cardRepository;
-    private CardMapper cardMapper;
+    private final CardRepository cardRepository;
+    private final CustomerRepository customerRepository;
+    private final CardMapper cardMapper;
+
 
     public CardResponseDTO getCardById(String accountId) {
         UUID cardId = (UUIDUtils.toUUID(accountId));
@@ -30,8 +35,15 @@ public class CardService {
 
     public CardResponseDTO createNewCard(CreateCardRequestDTO cardRequestDTO) {
         try {
+//            UUID customerId = UUID.fromString(cardRequestDTO.getCustomerId());
+//
+//            if (!customerRepository.existsById(customerId)) {
+//                throw new EntityNotFoundException("Customer not found: " + cardRequestDTO.getCustomerId());
+//            }
+
             Card newCard = cardMapper.requestDtoToCard(cardRequestDTO);
 
+            //newCard.setAccountId(null);
             newCard.setAccountId(UUID.randomUUID());
             newCard.setActive(true);
             newCard.setSecurityCode(generateSecurityCode());

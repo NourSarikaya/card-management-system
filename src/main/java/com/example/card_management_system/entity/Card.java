@@ -34,7 +34,7 @@ public class Card {
     */
 
     @Id
-    @GeneratedValue
+    //@GeneratedValue
     @Column (name="id", nullable = false, unique = true)
     private UUID accountId;
 
@@ -70,17 +70,6 @@ public class Card {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-    public Card(String cardNumber, CardType cardType, LocalDate expiryDate, String cardHolderName, boolean active, BigDecimal creditLimit, String securityCode, Customer customer) {
-        this.cardNumber = cardNumber;
-        this.cardType = cardType;
-        this.expiryDate = expiryDate;
-        this.cardHolderName = cardHolderName;
-        this.active = active;
-        this.creditLimit = creditLimit;
-        this.securityCode = securityCode;
-        this.customer = customer;
-    }
 
 
     //CARD TYPE ENUM

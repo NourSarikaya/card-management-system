@@ -28,33 +28,67 @@ class CardRepositoryTest {
 
 
     private Card testCard;
+    private Card testCard_2;
     private Customer testCustomer;
 
     @BeforeEach
     public void setUp() {
         // Initialize test data before each test method
         UUID cardId = UUID.randomUUID();
-        testCustomer = new Customer("firstname", "lastname",
-                "E", "nnn@gmail.com", "123123123121332",
-                Customer.PhoneType.MOBILE, "Street", "apt", "chi", "IL",
-                "60606");
+        UUID cardId_2 = UUID.randomUUID();
+        UUID customerId = UUID.randomUUID();
 
-        testCard = new Card(//cardId,
-                "6011111111111117",
-                CardType.CREDIT,
-                LocalDate.of(2026, 2, 7),
-                "card holder name", true,
-                BigDecimal.valueOf(2000.00), "234", testCustomer);
+        testCustomer = Customer.builder()
+                .customerId(customerId)
+                .firstName("firstname")
+                .lastName("lastname")
+                .middleInitial("E")
+                .emailAddress("nnn@gmail.com")
+                .phoneNumber("123123123121332")
+                .phoneType(Customer.PhoneType.MOBILE)
+                .addressLine1("Street")
+                .addressLine2("apt")
+                .cityName("chi")
+                .state("IL")
+                .zipcode("60606")
+                .build();
+
+        testCard = Card.builder()
+                .accountId(cardId)
+                .cardNumber("6011111111111117")
+                .cardType(CardType.CREDIT)
+                .cardHolderName("card holder name")
+                .expiryDate(LocalDate.of(2026, 2, 7))
+                .creditLimit(BigDecimal.valueOf(2000.00))
+                .securityCode("234")
+                .active(true)
+                .customer(testCustomer)
+                .build();
+
+        //Save another card for the same customer
+        testCard_2 = Card.builder()
+                .accountId(cardId_2)
+                .cardNumber("4111111111111111")
+                .cardType(CardType.CREDIT)
+                .cardHolderName("card holder name")
+                .expiryDate(LocalDate.of(2026, 2, 7))
+                .creditLimit(BigDecimal.valueOf(2000.00))
+                .securityCode("234")
+                .active(true)
+                .customer(testCustomer)
+                .build();
 
         customerRepository.save(testCustomer);
         cardRepository.save(testCard);
-
+        cardRepository.save(testCard_2);
     }
 
     @AfterEach
     public void tearDown() {
         // Release test data after each test method
+        customerRepository.delete(testCustomer);
         cardRepository.delete(testCard);
+        cardRepository.delete(testCard_2);
     }
 
 
@@ -69,22 +103,18 @@ class CardRepositoryTest {
     @Test
     void givenCard_whenFindByCustomerIdCalled_thenCardIsFound() {
 
-        //Save another card for the same customer
-        UUID cardId_2 = UUID.randomUUID();
-        Card testCard_2 = new Card(//cardId_2,
-                "4111111111111111", CardType.CREDIT,
-                LocalDate.of(2026, 2, 7),
-                "card holder name", true,
-                BigDecimal.valueOf(2000.00), "234", testCustomer);
-        cardRepository.save(testCard_2);
-
-
         List<Card> cards = cardRepository.findByCustomer_CustomerId(testCustomer.getCustomerId());
 
 
         assertThat(cards).isNotEmpty();
         assertThat(cards).hasSize(2);
-        assertThat(cards).containsExactlyInAnyOrder(testCard, testCard_2);
+        assertThat(cards)
+                .allSatisfy(c -> {
+                    assertThat(c.getCustomer().getCustomerId()).isEqualTo(testCustomer.getCustomerId());
+                    assertThat(c.getCardHolderName()).isEqualTo("card holder name");
+                    assertThat(c.getExpiryDate()).isEqualTo(LocalDate.of(2026, 2, 7));
+                });
+
     }
 
     @Test

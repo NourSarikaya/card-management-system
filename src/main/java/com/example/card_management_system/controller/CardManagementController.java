@@ -51,7 +51,7 @@ public class CardManagementController {
      * @param accountId
      * @return status code & fetched Card in the response body
      */
-    @GetMapping("/cards/{cardId}")
+    @GetMapping("/cards/{accountId}")
     public ResponseEntity<CardResponseDTO> getCardById(@PathVariable String accountId){
         logger.info("GET /cards/{}- retrieving card",accountId);
 
@@ -68,7 +68,7 @@ public class CardManagementController {
      * @param accountId, update
      * @return status code & updated Card in the response body
      */
-    @PutMapping("/cards/{cardId}")
+    @PutMapping("/cards/{accountId}")
     public ResponseEntity<CardResponseDTO> updateCardById(@PathVariable String accountId, @Valid @RequestBody CardUpdateDTO update){
         logger.info("PUT /cards/{}- updating card",accountId);
 

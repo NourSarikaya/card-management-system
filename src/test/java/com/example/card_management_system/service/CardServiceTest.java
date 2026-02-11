@@ -133,15 +133,14 @@ public class CardServiceTest {
                                                    .build();
 
         when(cardRepository.findById(accountId)).thenReturn(Optional.of(existingCard));
-
         when(cardRepository.save(any(Card.class))).thenReturn(existingCard);
         when(cardMapper.cardToResponseDto(any(Card.class))).thenReturn(new CardResponseDTO());
 
-        cardService.updateCard(accountId, cardUpdateDTO);
+        cardService.updateCard(accountId.toString(), cardUpdateDTO);
 
         verify(cardMapper).updateCardFromDto(cardUpdateDTO, existingCard);
-
         verify(cardRepository).save(existingCard);
+        verify(cardMapper).cardToResponseDto(existingCard);
 
     }
 
@@ -153,7 +152,7 @@ public class CardServiceTest {
         when(cardRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            cardService.updateCard(nonExistentId, cardUpdateDTO);
+            cardService.updateCard(nonExistentId.toString(), cardUpdateDTO);
         });
 
         assertThat(exception.getMessage()).contains("Failed to update card");

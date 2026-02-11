@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -16,6 +13,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access= AccessLevel.PUBLIC, force = true)
+@AllArgsConstructor
+@Builder
 public class Customer {
     /*
         1.	customerID(UUID): Unique Identifier for each card

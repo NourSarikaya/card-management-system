@@ -4,10 +4,7 @@ import com.example.card_management_system.dto.CardResponseDTO;
 import com.example.card_management_system.dto.CardUpdateDTO;
 import com.example.card_management_system.dto.CreateCardRequestDTO;
 import com.example.card_management_system.entity.Card;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Mappings;
+import org.mapstruct.*;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -30,6 +27,7 @@ public interface CardMapper {
     })
     Card requestDtoToCard(CreateCardRequestDTO dto);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateCardFromDto(CardUpdateDTO dto, @MappingTarget Card entity);
 
     default LocalDate mapStringToLastDay(String expiryDate) {

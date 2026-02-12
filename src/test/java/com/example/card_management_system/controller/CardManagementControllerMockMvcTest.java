@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class CardManagementControllerMockMvcTest {
 
     @Autowired
@@ -45,8 +47,7 @@ class CardManagementControllerMockMvcTest {
     @Autowired
     private CustomerRepository customerRepository;
 
-    private Card testCard;
-    private Card testCard_2;
+
     private Customer testCustomer;
 
     @BeforeEach
@@ -70,8 +71,6 @@ class CardManagementControllerMockMvcTest {
                 .build();
         //existing customer the card will be created for
         customerRepository.save(testCustomer);
-        //ensure repo empty
-        cardRepository.deleteAll();
     }
 
 
@@ -80,14 +79,13 @@ class CardManagementControllerMockMvcTest {
     void shouldCreateNewCard_CustomerExists() throws Exception{
         //need existing customer before creating card
 
-
         CreateCardRequestDTO cardRequest = CreateCardRequestDTO.builder()
                 .cardNumber("4111111111111111")
                 .cardType("CREDIT")
                 .customerId(String.valueOf(testCustomer.getCustomerId()))
                 .creditLimit("3000")
                 .expiryDate("202605")
-                .cardHolderName("firstname lastname").build();
+                .cardHolderName("card holder name").build();
 
         mockMvc.perform(post("/cards")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -96,8 +94,6 @@ class CardManagementControllerMockMvcTest {
                 .andDo(print()).andExpect(status().isCreated());
 
         assertThat(cardRepository.count()).isEqualTo(1);
-
-        cardRepository.deleteAll();
     }
 
     @Test
@@ -121,10 +117,11 @@ class CardManagementControllerMockMvcTest {
         assertThat(cardRepository.count()).isEqualTo(0);
     }
 
-    @Test
-    void shouldUpdateNewCard_GivenValidAccountId() throws Exception{
+   @Test
+    void shouldUpdateCreditLimit_OfCard_GivenValidAccountId() throws Exception {
         //Create the card to be updated in the repository
-        UUID accountId = UUID.randomUUID();
+
+       UUID accountId = UUID.randomUUID();
         Card testCard = Card.builder()
                 .accountId(accountId)
                 .cardNumber("6011111111111117")
@@ -140,9 +137,9 @@ class CardManagementControllerMockMvcTest {
         cardRepository.save(testCard);
 
         //Update Credit Limit of Card
-        CardUpdateDTO cardUpdate = CardUpdateDTO.builder().creditLimit("6500.00").expiryDate("202606").build();
+        CardUpdateDTO cardUpdate = CardUpdateDTO.builder().creditLimit("6500.00").build();
 
-        mockMvc.perform(put("/cards/{accountId}",testCard.getAccountId())
+        mockMvc.perform(put("/cards/{accountId}", testCard.getAccountId())
                         .contentType(MediaType.APPLICATION_JSON)
                         //Jackson Object Mapper to Json String
                         .content(objectMapper.writeValueAsString(cardUpdate)))
@@ -152,10 +149,6 @@ class CardManagementControllerMockMvcTest {
 
         assertThat(updatedCard).isNotNull();
         assertThat(updatedCard.getCreditLimit()).isEqualTo(cardUpdate.getCreditLimit());
-
-        cardRepository.deleteAll();
     }
-
-
-
+    
 }

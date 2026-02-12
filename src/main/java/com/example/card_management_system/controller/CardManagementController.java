@@ -154,15 +154,15 @@ public class CardManagementController {
      * @param customerId
      * @return status code & fetched Cards in the response body
      */
-//    @GetMapping("/customers/{customerId}/cards")
-//    public ResponseEntity<List<CardResponseDTO>> getAllCardsByCustomerId(@PathVariable UUID customerId){
-//        logger.info("GET /customers/{}/cards- retrieving all cards",customerId);
-//
-//        List<CardResponseDTO> retrievedCards = cardService.getAllCardsByCustomerId(customerId);
-//
-//        logger.info("GET /customers/{}/cards- successfully retrieved all cards",customerId);
-//        return ResponseEntity.ok(retrievedCards);
-//    }
+    @GetMapping("/customers/{customerId}/cards")
+    public ResponseEntity<List<CardResponseDTO>> getAllCardsByCustomerId(@PathVariable String customerId){
+        logger.info("GET /customers/{}/cards- retrieving all cards",customerId);
+
+        List<CardResponseDTO> retrievedCards = cardService.getAllCardsByCustomerId(customerId);
+
+        logger.info("GET /customers/{}/cards- successfully retrieved all cards",customerId);
+        return ResponseEntity.ok(retrievedCards);
+    }
 
 
 

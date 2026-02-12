@@ -287,4 +287,44 @@ class CardManagementControllerMockMvcTest {
         assertThat(updatedCustomer.getEmailAddress()).isEqualTo(customerUpdate.getEmailAddress());
     }
 
+    @Test
+    void shouldRetrieveAllCards_GivenValidCustomerId() throws Exception {
+        //Create cards to be retrieved from the repository
+        UUID accountId = UUID.randomUUID();
+        UUID accountId_2 = UUID.randomUUID();
+
+        Card testCard = Card.builder()
+                .accountId(accountId)
+                .cardNumber("6011111111111117")
+                .cardType(Card.CardType.CREDIT)
+                .cardHolderName("card holder name")
+                .expiryDate(LocalDate.of(2026, 2, 7))
+                .creditLimit(BigDecimal.valueOf(2000.00))
+                .securityCode("234")
+                .active(true)
+                .customer(testCustomer)
+                .build();
+
+        Card testCard_2 = Card.builder()
+                .accountId(accountId_2)
+                .cardNumber("4111111111111111")
+                .cardType(Card.CardType.CREDIT)
+                .cardHolderName("card holder name")
+                .expiryDate(LocalDate.of(2026, 2, 7))
+                .creditLimit(BigDecimal.valueOf(2000.00))
+                .securityCode("234")
+                .active(true)
+                .customer(testCustomer)
+                .build();
+
+        cardRepository.save(testCard);
+        cardRepository.save(testCard_2);
+
+        mockMvc.perform(get("/customers/{customerId}/cards", testCustomer.getCustomerId()))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+
+    }
+
 }

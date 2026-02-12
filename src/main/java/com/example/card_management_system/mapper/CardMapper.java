@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CardMapper {
@@ -20,6 +21,10 @@ public interface CardMapper {
 
     })
     CardResponseDTO cardToResponseDto(Card card);
+
+    default List<CardResponseDTO> cardsToResponseDtoList(List<Card> cards){
+        return cards.stream().map(this::cardToResponseDto).toList();
+    }
 
     @Mappings({
             @Mapping(target = "expiryDate", expression = "java(mapStringToLastDay(dto.getExpiryDate()))"),

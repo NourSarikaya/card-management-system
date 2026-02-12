@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -80,8 +81,21 @@ public class CardService {
     public void deleteCardById(String accountId) {
         UUID cardId = (UUIDUtils.toUUID(accountId));
 
-        try{cardRepository.deleteById(cardId);
+        try{
+            cardRepository.deleteById(cardId);
 
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Failed to delete card: " + e.getMessage());
+        }
+
+    }
+
+    public List<CardResponseDTO> getAllCardsByCustomerId(String customerId) {
+        UUID customerUUID = (UUIDUtils.toUUID(customerId));
+
+        try{
+            List<Card> cards = cardRepository.findByCustomer_CustomerId(customerUUID);
+            return cardMapper.cardsToResponseDtoList(cards);
         } catch (RuntimeException e) {
             throw new RuntimeException("Failed to delete card: " + e.getMessage());
         }

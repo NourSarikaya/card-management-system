@@ -141,7 +141,7 @@ public class CardManagementController {
     public ResponseEntity<Void> deleteCardById(@PathVariable String accountId){
         logger.info("DELETE /cards/{}- deleting card",accountId);
 
-        cardService.deleteCardById(accountId); //404
+        cardService.deleteCard(accountId); //404
 
         logger.info("DELETE /cards/{}- successfully deleted card",accountId);
         return ResponseEntity.noContent().build();

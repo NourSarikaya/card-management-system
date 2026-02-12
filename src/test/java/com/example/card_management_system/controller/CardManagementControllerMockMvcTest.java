@@ -24,9 +24,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -177,6 +175,30 @@ class CardManagementControllerMockMvcTest {
                 .andExpect(jsonPath("$.cardNumber", is(testCard.getCardNumber())))
                 .andExpect(jsonPath("$.cardType", is(String.valueOf(testCard.getCardType()))))
                 .andExpect(jsonPath("$.cardHolderName", is(testCard.getCardHolderName())));
+
+    }
+
+    @Test
+    void shouldDeleteCard_GivenValidAccountId() throws Exception {
+        //Create the card to be retrieved from the repository
+        UUID accountId = UUID.randomUUID();
+        Card testCard = Card.builder()
+                .accountId(accountId)
+                .cardNumber("6011111111111117")
+                .cardType(Card.CardType.CREDIT)
+                .cardHolderName("card holder name")
+                .expiryDate(LocalDate.of(2026, 2, 7))
+                .creditLimit(BigDecimal.valueOf(2000.00))
+                .securityCode("234")
+                .active(true)
+                .customer(testCustomer)
+                .build();
+
+        cardRepository.save(testCard);
+
+        mockMvc.perform(delete("/cards/{accountId}", testCard.getAccountId()))
+                .andDo(print())
+                .andExpect(status().isNoContent());
 
     }
 

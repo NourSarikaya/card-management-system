@@ -134,18 +134,18 @@ public class CardManagementController {
      * DELETE CARD BY ID
      * deleteCardById(@PathVariable UUID cardId)
      * Deletes card given cardId
-     * @param cardId
+     * @param accountId
      * @return
      */
-//    @DeleteMapping("/cards/{cardId}")
-//    public ResponseEntity<Void> deleteCardById(@PathVariable UUID cardId){
-//        logger.info("DELETE /cards/{}- deleting card",cardId);
-//
-//        cardService.deleteCardById(cardId); //404
-//
-//        logger.info("DELETE /cards/{}- successfully deleted card",cardId);
-//        return ResponseEntity.noContent().build();
-//    }
+    @DeleteMapping("/cards/{accountId}")
+    public ResponseEntity<Void> deleteCardById(@PathVariable String accountId){
+        logger.info("DELETE /cards/{}- deleting card",accountId);
+
+        cardService.deleteCardById(accountId); //404
+
+        logger.info("DELETE /cards/{}- successfully deleted card",accountId);
+        return ResponseEntity.noContent().build();
+    }
 
     /**
      * GET ALL CARDS BY CUSTOMER ID

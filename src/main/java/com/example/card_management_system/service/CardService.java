@@ -76,4 +76,15 @@ public class CardService {
 
         return String.format("%03d", code);
     }
+
+    public void deleteCardById(String accountId) {
+        UUID cardId = (UUIDUtils.toUUID(accountId));
+
+        try{cardRepository.deleteById(cardId);
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Failed to delete card: " + e.getMessage());
+        }
+
+    }
 }

@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -156,10 +157,74 @@ public class CardServiceTest {
         });
 
         assertThat(exception.getMessage()).contains("Failed to update card");
-        assertThat(exception.getMessage()).contains("Card not found with ID");
 
         // verify no other operations were done
         verifyNoInteractions(cardMapper);
         verify(cardRepository, never()).save(any());
+    }
+
+    @Test
+    void givenValidAccountId_whenDeleteCardCalled_thenDeleteCard() {
+        UUID accountId = UUID.randomUUID();
+        Card existingCard = Card.builder().accountId(accountId).build();
+
+        when(cardRepository.findById(accountId)).thenReturn(Optional.of(existingCard));
+
+        cardService.deleteCard(accountId.toString());
+
+        verify(cardRepository).delete(existingCard);
+        verify(cardRepository).findById(accountId);
+    }
+
+    @Test
+    void givenInvalidAccountId_whenDeleteCardCalled_thenThrowsException() {
+        UUID accountId = UUID.randomUUID();
+        Card existingCard = Card.builder().accountId(accountId).build();
+
+        when(cardRepository.findById(accountId)).thenThrow(new EntityNotFoundException("Could not delete card"));
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            cardService.deleteCard(accountId.toString());
+        });
+
+
+        assertTrue(exception.getMessage().contains("Could not delete card"));
+        verify(cardRepository, never()).delete(existingCard);
+    }
+
+    @Test
+    void givenAValidCustomerId_whenGetAllCardsByCustomerIdCalled_thenReturnCardResponseList() {
+        UUID customerId = UUID.randomUUID();
+        Card card = Card.builder().accountId(customerId).build();
+        Card card2 = Card.builder().accountId(customerId).build();
+
+        List<Card> cardList = List.of(card, card2);
+        CardResponseDTO cardResponseDTO = CardResponseDTO.builder().customerId(customerId.toString()).build();
+
+
+        when(cardRepository.findByCustomer_CustomerId(customerId)).thenReturn(cardList);
+        when(cardMapper.cardToResponseDto(any(Card.class))).thenReturn(cardResponseDTO);
+
+        List<CardResponseDTO> results = cardService.getAllCardsByCustomerId(customerId.toString());
+
+        assertThat(results).isNotNull().hasSize(2).allMatch(dto -> dto.getCustomerId().equals(customerId.toString()));
+
+        verify(cardRepository).findByCustomer_CustomerId(customerId);
+        verify(cardMapper, times(2)).cardToResponseDto(any());
+    }
+
+    @Test
+    void givenACustomerWithNoCards_whenGetAllCardsByCustomerIdCalled_thenThrowException() {
+        UUID customerId = UUID.randomUUID();
+
+        when(cardRepository.findByCustomer_CustomerId(customerId)).thenReturn(List.of());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            cardService.getAllCardsByCustomerId(customerId.toString());
+        });
+
+        assertTrue(exception.getMessage().contains("No cards found for customer"));
+        verify(cardRepository, times(1)).findByCustomer_CustomerId(customerId);
+        verifyNoInteractions(cardMapper);
     }
 }

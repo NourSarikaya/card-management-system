@@ -3,6 +3,7 @@ import com.example.card_management_system.dto.*;
 import com.example.card_management_system.entity.Card;
 import com.example.card_management_system.service.CardService;
 //import com.example.card_management_system.service.CustomerService;
+import com.example.card_management_system.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +26,7 @@ public class CardManagementController {
     private static final Logger logger = LoggerFactory.getLogger(CardManagementController.class);
 
     private final CardService cardService;
-    //private final CustomerService customerService;
+    private final CustomerService customerService;
 
     /**
      * CREATE CARD
@@ -85,15 +86,15 @@ public class CardManagementController {
      * @param request the request that contains the customer info
      * @return status code & created Customer in the response body
      */
-//    @PostMapping("/customers")
-//    public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO request){
-//        logger.info("POST /customers - creating customer ");
-//
-//        CustomerResponseDTO created= customerService.createCustomer(request);
-//
-//        logger.info("POST /customers - successfully created customer with id = {}", created.getCustomerID());
-//        return ResponseEntity.status(201).body(created);
-//    }
+    @PostMapping("/customers")
+    public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO request){
+        logger.info("POST /customers - creating customer ");
+
+        CustomerResponseDTO created= customerService.createNewCustomer(request);
+
+        logger.info("POST /customers - successfully created customer with id = {}", created.getCustomerID());
+        return ResponseEntity.status(201).body(created);
+    }
 
     /**
      * GET CUSTOMER BY ID
@@ -102,15 +103,15 @@ public class CardManagementController {
      * @param customerId
      * @return status code & fetched Customer in the response body
      */
-//    @GetMapping("/customers/{customerId}")
-//    public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable UUID customerId){
-//        logger.info("GET /customers/{}- retrieving customer",customerId);
-//
-//        CustomerResponseDTO updated = customerService.getCustomerById(customerId);
-//
-//        logger.info("GET /customers/{}- successfully retrieved customer",customerId);
-//        return ResponseEntity.ok(updated);
-//    }
+    @GetMapping("/customers/{customerId}")
+    public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable String customerId){
+        logger.info("GET /customers/{}- retrieving customer",customerId);
+
+        CustomerResponseDTO updated = customerService.getCustomerById(customerId);
+
+        logger.info("GET /customers/{}- successfully retrieved customer",customerId);
+        return ResponseEntity.ok(updated);
+    }
 
     /**
      * UPDATE CUSTOMER WITH GIVEN ID
@@ -119,15 +120,15 @@ public class CardManagementController {
      * @param customerId, update
      * @return status code & updated Customer in the response body
      */
-//    @PutMapping("/customers/{customerId}")
-//    public ResponseEntity<CustomerResponseDTO> updateCustomerById(@PathVariable UUID customerId, @Valid @RequestBody CustomerUpdateDTO update){
-//        logger.info("PUT /customers/{}- updating customer",customerId);
-//
-//        CustomerResponseDTO updated = customerService.updateCustomer(customerId, update);
-//
-//        logger.info("PUT /customers/{}- successfully updated customer",customerId);
-//        return ResponseEntity.ok(updated);
-//    }
+    @PutMapping("/customers/{customerId}")
+    public ResponseEntity<CustomerResponseDTO> updateCustomerById(@PathVariable String customerId, @Valid @RequestBody CustomerUpdateDTO update){
+        logger.info("PUT /customers/{}- updating customer",customerId);
+
+        CustomerResponseDTO updated = customerService.updateCustomer(customerId, update);
+
+        logger.info("PUT /customers/{}- successfully updated customer",customerId);
+        return ResponseEntity.ok(updated);
+    }
 
     /**
      * DELETE CARD BY ID

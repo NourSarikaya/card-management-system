@@ -45,7 +45,6 @@ public class Customer {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @NotBlank
     @Size(max = 1)
     @Column(name = "middle_initial")
     private String middleInitial;

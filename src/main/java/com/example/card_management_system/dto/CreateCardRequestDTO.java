@@ -20,7 +20,7 @@ public class CreateCardRequestDTO {
     @NotBlank(message = "Customer ID is required")
     private String customerId;
     @NotBlank(message = "Card Number is required")
-    //@CreditCardNumber(message = "Must be a valid Luhn card number")
+    @CreditCardNumber(message = "Must be a valid Luhn card number")
     @Pattern(regexp = "\\d{13,16}", message="Card Number cannot be more than 16 digits")
     private String cardNumber;
     @NotBlank(message = "Card Type is required")

@@ -320,7 +320,7 @@ class CardManagementControllerMockMvcTest {
         cardRepository.save(testCard);
         cardRepository.save(testCard_2);
 
-        mockMvc.perform(get("/customers/{customerId}/cards", testCustomer.getCustomerId()))
+        mockMvc.perform(get("/cards/{customerId}/cards", testCustomer.getCustomerId()))
                 .andExpect(status().isOk())
                 .andDo(print());
 

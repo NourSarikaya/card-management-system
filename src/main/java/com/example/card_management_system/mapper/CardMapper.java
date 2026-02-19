@@ -27,6 +27,7 @@ public interface CardMapper {
     })
     Card requestDtoToCard(CreateCardRequestDTO dto);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateCardFromDto(CardUpdateDTO dto, @MappingTarget Card entity);
 
     default LocalDate mapStringToLastDay(String expiryDate) {

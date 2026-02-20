@@ -5,9 +5,6 @@ import com.example.card_management_system.entity.Card;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.time.YearMonth;
-import java.time.format.DateTimeParseException;
-
 
 public class CardLimitMatchValidator implements ConstraintValidator<CardLimitMatch, CreateCardRequestDTO> {
 

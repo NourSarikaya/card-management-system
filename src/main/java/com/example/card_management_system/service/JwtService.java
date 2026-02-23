@@ -40,9 +40,11 @@ public class JwtService {
             JWSSigner signer = new MACSigner(secret.getBytes());
             signedJWT.sign(signer);
 
+            log.info("Successfully generated access token for: {}", clientId);
             return signedJWT.serialize();
 
         } catch (JOSEException e) {
+            log.error("Could not generate token for: {}", clientId);
             throw new RuntimeException("Error generation JWT", e);
         }
     }

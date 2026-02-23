@@ -11,22 +11,28 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-
     @Bean
     public OpenAPI customOpenAPI() {
 
-        String securitySchemeName = "JWT_Authentication_Gate";
+        String bearerAuth = "bearerAuth";
+        String basicAuth = "basicAuth";
 
         return new OpenAPI().info(new Info().title("Card Management System API")
                                             .version("1.0")
-                                            .description("M2M Authenticated API for "))
-                            .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                                            .description("Secure API for card management system"))
                             .components(new Components()
-                                    .addSecuritySchemes(securitySchemeName, new SecurityScheme()
-                                            .name(securitySchemeName)
+                                    .addSecuritySchemes(bearerAuth, new SecurityScheme()
+                                            .name(bearerAuth)
                                             .type(SecurityScheme.Type.HTTP)
                                             .scheme("bearer")
-                                            .bearerFormat("JWT")));
+                                            .bearerFormat("JWT"))
+                                    .addSecuritySchemes(basicAuth, new SecurityScheme()
+                                            .name(basicAuth)
+                                            .type(SecurityScheme.Type.HTTP)
+                                            .scheme("basic")));
+//                            .addSecurityItem(new SecurityRequirement()
+//                                    .addList(bearerAuth)
+//                                    .addList(basicAuth));
 
     }
 }

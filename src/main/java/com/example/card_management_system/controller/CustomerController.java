@@ -4,6 +4,8 @@ import com.example.card_management_system.dto.CreateCustomerRequestDTO;
 import com.example.card_management_system.dto.CustomerResponseDTO;
 import com.example.card_management_system.dto.CustomerUpdateDTO;
 import com.example.card_management_system.service.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +15,14 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/customers")
 public class CustomerController {
 
     private final CustomerService customerService;
 
 
-    @PostMapping("/customers")
+    @PostMapping("/create")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CreateCustomerRequestDTO request) {
         log.info("POST /customers - creating customer ");
 
@@ -28,7 +32,8 @@ public class CustomerController {
         return ResponseEntity.status(201).body(created);
     }
 
-    @GetMapping("/customers/{customerId}")
+    @GetMapping("/find/{customerId}")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable String customerId) {
         log.info("GET /customers/{}- retrieving customer", customerId);
 
@@ -39,7 +44,8 @@ public class CustomerController {
     }
 
 
-    @PutMapping("/customers/{customerId}")
+    @PutMapping("/update/{customerId}")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<CustomerResponseDTO> updateCustomerById(@PathVariable String customerId, @Valid @RequestBody CustomerUpdateDTO update) {
         log.info("PUT /customers/{}- updating customer", customerId);
 

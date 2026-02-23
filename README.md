@@ -9,7 +9,7 @@ The **Card Management System** serves as a centralized backend for financial ser
 
 ## Key Accomplishments 
 * **Secure Authentication Pipeline**: Successfully transitioned from basic request-body credentials to a dual layered **Basic Auth** (for login) and **JWT Bearer Auth** (for stateless session management) system.
-* **Custom Validation Engine**: Developed propreitary annotations to enforce business rules, such as credit to limit and date formatting ('yyyyMM').
+* **Custom Validation Engine**: Developed propreitary annotations to enforce business rules, such as credit to limit and date formatting (`yyyyMM`).
 * **Automated API Documentation**: Integrated **Swagger UI**, providing a living interactive documentation portal that simplifies developer onboarding and manual testing.
 * **Stateless Security Architecture**: Built a security filter chain that decodes and validates JWTs, ensuring the application remains stateless and horizontally scalable.
 

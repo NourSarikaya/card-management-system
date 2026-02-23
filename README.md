@@ -6,6 +6,10 @@ A Spring Boot application designed to securely manage card data and customer pro
 The **Card Management System** serves as a centralized backend for financial services to handle the life cycle of cards and customer information.  It solves the need for secure data storage, identity verification through JWT, and automated business rule enforcement(e.g. credit limit/expiry validation).
 
 ---
+## Technology Stack
+* **Java**: version 17
+* **JDK**: Eclipse Temurin 25
+* **Database**: PostgreSQL
 
 ## Key Accomplishments 
 * **Secure Authentication Pipeline**: Successfully transitioned from basic request-body credentials to a dual layered **Basic Auth** (for login) and **JWT Bearer Auth** (for stateless session management) system.

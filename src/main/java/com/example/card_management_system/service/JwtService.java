@@ -1,52 +1,48 @@
 package com.example.card_management_system.service;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
+
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Date;
+import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class JwtService {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final JwtEncoder encoder;
 
-//    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-//    private String issuer;
+    public String generateToken(Authentication authentication) {
+        Instant now = Instant.now();
 
-    public String generateToken(String clientId) {
-        try {
-            JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().subject(clientId)
-                                                               .issuer("card-management-system")
-                                                               .issueTime(new Date())
-                                                               .expirationTime(Date.from(Instant.now().plusSeconds(3600)))
-                                                               .build();
+        String scope = authentication.getAuthorities()
+                                     .stream()
+                                     .map(GrantedAuthority::getAuthority)
+                                     .collect(Collectors.joining(" "));
 
-            JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
-            SignedJWT signedJWT = new SignedJWT(header, claimsSet);
+        log.info("Successfully generated access token for: {}", authentication.getName());
 
-            JWSSigner signer = new MACSigner(secret.getBytes());
-            signedJWT.sign(signer);
+        JwtClaimsSet claimsSet = JwtClaimsSet.builder()
+                                             .issuer("self")
+                                             .issuedAt(now)
+                                             .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                                             .subject(authentication.getName())
+                                             .claim("scope", scope)
+                                             .build();
 
-            log.info("Successfully generated access token for: {}", clientId);
-            return signedJWT.serialize();
+        JwsHeader jwsHeader = JwsHeader.with(MacAlgorithm.HS256).build();
 
-        } catch (JOSEException e) {
-            log.error("Could not generate token for: {}", clientId);
-            throw new RuntimeException("Error generation JWT", e);
-        }
+        return this.encoder.encode(JwtEncoderParameters.from(jwsHeader, claimsSet)).getTokenValue();
     }
-
 }

@@ -18,19 +18,19 @@ class CustomerMapperTest {
     void givenValidCustomerEntity_whenCustomerToResponseDtoCalled_thenReturnCustomerResponseDto() {
         UUID customerId = UUID.randomUUID();
         Customer customer = Customer.builder()
-                .customerId(customerId)
-                .firstName("John")
-                .middleInitial("M")
-                .lastName("Smith")
-                .emailAddress("john@email.com")
-                .phoneNumber("1231231234")
-                .phoneType(Customer.PhoneType.MOBILE)
-                .addressLine1("123 main st")
-                .addressLine2("unit 24")
-                .cityName("Chicago")
-                .state("IL")
-                .zipcode("60606")
-                .build();
+                                    .customerId(customerId)
+                                    .firstName("John")
+                                    .middleInitial("M")
+                                    .lastName("Smith")
+                                    .emailAddress("john@email.com")
+                                    .phoneNumber("1231231234")
+                                    .phoneType(Customer.PhoneType.MOBILE)
+                                    .addressLine1("123 main st")
+                                    .addressLine2("unit 24")
+                                    .cityName("Chicago")
+                                    .state("IL")
+                                    .zipcode("60606")
+                                    .build();
 
         CustomerResponseDTO result = customerMapper.customerToResponseDto(customer);
 
@@ -52,18 +52,18 @@ class CustomerMapperTest {
     @Test
     void givenValidRequestDto_whenMapped_thenCustomerFieldsMatch() {
         CreateCustomerRequestDTO dto = CreateCustomerRequestDTO.builder()
-                .firstName("John")
-                .middleInitial("H")
-                .lastName("Smith")
-                .emailAddress("john@email.com")
-                .phoneNumber("1231231234")
-                .phoneType("MOBILE") // must match the enum constant name for valueOf()
-                .addressLine1("123 main st")
-                .addressLine2("unit 24")
-                .cityName("Chicago")
-                .state("IL")
-                .zipCode("60606")
-                .build();
+                                                               .firstName("John")
+                                                               .middleInitial("H")
+                                                               .lastName("Smith")
+                                                               .emailAddress("john@email.com")
+                                                               .phoneNumber("1231231234")
+                                                               .phoneType("MOBILE") // must match the enum constant name for valueOf()
+                                                               .addressLine1("123 main st")
+                                                               .addressLine2("unit 24")
+                                                               .cityName("Chicago")
+                                                               .state("IL")
+                                                               .zipCode("60606")
+                                                               .build();
 
         // Act
         Customer result = customerMapper.requestDtoToCustomer(dto);
@@ -85,29 +85,29 @@ class CustomerMapperTest {
     public void givenCustomerUpdateDto_whenMapped_thenCustomerFieldsUpdated() {
         UUID customerId = UUID.randomUUID();
         Customer existingCustomer = Customer.builder()
-                .customerId(customerId)
-                .firstName("John")
-                .middleInitial("M")
-                .lastName("Smith")
-                .emailAddress("old@email.com")
-                .phoneNumber("1231231234")
-                .phoneType(Customer.PhoneType.MOBILE)
-                .addressLine1("123 Main St.")
-                .addressLine2("Unit 24")
-                .cityName("Chicago")
-                .state("IL")
-                .zipcode("60606")
-                .build();
+                                            .customerId(customerId)
+                                            .firstName("John")
+                                            .middleInitial("M")
+                                            .lastName("Smith")
+                                            .emailAddress("old@email.com")
+                                            .phoneNumber("1231231234")
+                                            .phoneType(Customer.PhoneType.MOBILE)
+                                            .addressLine1("123 Main St.")
+                                            .addressLine2("Unit 24")
+                                            .cityName("Chicago")
+                                            .state("IL")
+                                            .zipcode("60606")
+                                            .build();
 
         CustomerUpdateDTO updateDto = CustomerUpdateDTO.builder()
-                .emailAddress("new@email.com")
-                .phoneNumber("3213214321")
-                .addressLine1("321 New St.")
-                .addressLine2("Unit 50")
-                .cityName("Houston")
-                .state("TX")
-                .zipCode("40203")
-                .build();
+                                                       .emailAddress("new@email.com")
+                                                       .phoneNumber("3213214321")
+                                                       .addressLine1("321 New St.")
+                                                       .addressLine2("Unit 50")
+                                                       .cityName("Houston")
+                                                       .state("TX")
+                                                       .zipCode("40203")
+                                                       .build();
 
         customerMapper.updateCustomerFromDto(updateDto, existingCustomer);
 
@@ -124,8 +124,13 @@ class CustomerMapperTest {
         assertThat(existingCustomer.getCityName()).isEqualTo(updateDto.getCityName());
         assertThat(existingCustomer.getState()).isEqualTo(updateDto.getState());
         assertThat(existingCustomer.getZipcode()).isEqualTo(updateDto.getZipCode());
+    }
 
+    @Test
+    void givenNullCustomerResponseEntity_whenMapperCalled_thenReturnNull() {
+        CustomerResponseDTO response = customerMapper.customerToResponseDto(null);
 
+        assertThat(response).isEqualTo(null);
     }
 
 }

@@ -79,6 +79,31 @@ public class CardMapperTest {
     }
 
     @Test
+    void givenDebitCardRequestDto_whenRequestDtoToCardCalled_thenReturnsCardEntity() {
+        UUID uuid = UUID.randomUUID();
+        String customerId = uuid.toString();
+
+        CreateCardRequestDTO createCardRequestDTO = CreateCardRequestDTO.builder()
+                                                                        .customerId(customerId)
+                                                                        .cardNumber("1234123412341234")
+                                                                        .cardType(Card.CardType.DEBIT.toString())
+                                                                        .expiryDate(null)
+                                                                        .cardHolderName("John")
+                                                                        .build();
+
+        Card result = cardMapper.requestDtoToCard(createCardRequestDTO);
+
+        assertThat(result.getCardNumber()).isEqualTo(createCardRequestDTO.getCardNumber());
+        assertThat(result.getCardType()).isEqualTo(Card.CardType.valueOf(createCardRequestDTO.getCardType()
+                                                                                             .toUpperCase()));
+        assertThat(result.getCardNumber()).isEqualTo(createCardRequestDTO.getCardNumber());
+        assertThat(result.getExpiryDate()).isNull();
+        assertThat(result.getCardHolderName()).isEqualTo(createCardRequestDTO.getCardHolderName());
+        assertThat(result.getCustomer()
+                         .getCustomerId()).isEqualTo(UUIDUtils.toUUID(createCardRequestDTO.getCustomerId()));
+    }
+
+    @Test
     void givenValidCardUpdateRequest_whenUpdateCardCalled_thenOnlySpecificFieldsAreUpdated() {
         Card existingCard = Card.builder()
                                 .cardNumber("1234123412341234")

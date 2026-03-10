@@ -33,7 +33,7 @@ The **Card Management System** serves as a centralized backend for financial ser
 * **DTO Pattern**: Utilized **Data Transfer Objects** (where all fields are handled as `Strings`) to decouple the API contract from the database layer, allowing for use of our own validation.
 * **Mapper Pattern**: Implemented dedicated mapper components to handle transformation logic between entities and DTO's
 
-  <img width="400" height="711" alt="CMS-architecture-flow-chart" src="https://github.com/user-attachments/assets/96ae8ee6-23a4-4184-bb94-5f13b995aa18" />
+  <img align="center" width="400" height="711" alt="CMS-architecture-flow-chart" src="https://github.com/user-attachments/assets/96ae8ee6-23a4-4184-bb94-5f13b995aa18" />
 
 ---
 

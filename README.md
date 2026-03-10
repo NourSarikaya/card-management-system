@@ -43,13 +43,16 @@ The **Card Management System** serves as a centralized backend for financial ser
 
 ## Data Models 
 **Entities**
+
 <img width="624" height="372" alt="image" src="https://github.com/user-attachments/assets/862095d4-e092-4472-bc80-1d66f345b161" />
 
 **DTOs**
+
 <img width="663" height="322" alt="image" src="https://github.com/user-attachments/assets/4499146c-823a-4f5c-8df8-02ebc578a725" />
 
 <img width="665" height="378" alt="image" src="https://github.com/user-attachments/assets/6d2d90a7-3940-4c9b-8172-026cc0ef0a59" />
 
 **V1 DTOs**
+
 <img width="636" height="375" alt="image" src="https://github.com/user-attachments/assets/c403d587-ef03-4fd6-a4cb-778a621ca3b5" />
 

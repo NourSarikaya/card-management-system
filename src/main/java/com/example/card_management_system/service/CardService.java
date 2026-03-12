@@ -1,9 +1,8 @@
 package com.example.card_management_system.service;
 
 import com.example.card_management_system.dto.CardResponseDTO;
-import com.example.card_management_system.dto.CardUpdateDTO;
-import com.example.card_management_system.dto.CreateCardRequestDTO;
 import com.example.card_management_system.entity.Card;
+import com.example.card_management_system.entity.CardUpdate;
 import com.example.card_management_system.mapper.CardMapper;
 import com.example.card_management_system.repository.CardRepository;
 import com.example.card_management_system.util.UUIDUtils;
@@ -51,18 +50,18 @@ public class CardService {
 
     }
 
-    public CardResponseDTO updateCard(String accountId, CardUpdateDTO cardUpdateDTO) {
+    public Card updateCard(String accountId, CardUpdate CardUpdate) {
         try {
             UUID accountUuid = UUIDUtils.toUUID(accountId);
             Card existingCard = cardRepository.findById(accountUuid)
                                               .orElseThrow(() -> new RuntimeException("Card not found with ID: " + accountId));
 
-            cardMapper.updateCardFromDto(cardUpdateDTO, existingCard);
+            cardMapper.updateCardFromCardUpdate(CardUpdate, existingCard);
 
             Card updatedCard = cardRepository.save(existingCard);
             log.info("Successfully updated and saved card for account: {}", accountId);
 
-            return cardMapper.cardToResponseDto(updatedCard);
+            return updatedCard;
         } catch (RuntimeException e) {
             log.error("Error while updating card: {}", e.getMessage());
             throw new RuntimeException("Failed to update card");

@@ -2,14 +2,13 @@ package com.example.card_management_system.service;
 
 import com.example.card_management_system.dto.CardResponseDTO;
 import com.example.card_management_system.dto.CardUpdateDTO;
-import com.example.card_management_system.dto.CreateCardRequestDTO;
 import com.example.card_management_system.entity.Card;
+import com.example.card_management_system.entity.CardUpdate;
 import com.example.card_management_system.mapper.CardMapper;
 import com.example.card_management_system.repository.CardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -75,24 +74,23 @@ public class CardServiceTest {
     void givenValidCardUpdateDto_whenUpdateCardCalled_thenReturnsUpdatedResponse() {
         UUID accountId = UUID.randomUUID();
         Card existingCard = Card.builder()
-                .accountId(accountId)
-                .cardNumber("1234123412341234")
-                .build();
+                                .accountId(accountId)
+                                .cardNumber("1234123412341234")
+                                .build();
 
-        CardUpdateDTO cardUpdateDTO = CardUpdateDTO.builder()
-                .active("false")
-                .creditLimit(BigDecimal.valueOf(2000.00).toString())
-                .build();
+
+        CardUpdate cardUpdate = CardUpdate.builder()
+                                          .active(false)
+                                          .creditLimit(new BigDecimal(20000))
+                                          .build();
 
         when(cardRepository.findById(accountId)).thenReturn(Optional.of(existingCard));
         when(cardRepository.save(any(Card.class))).thenReturn(existingCard);
-        when(cardMapper.cardToResponseDto(any(Card.class))).thenReturn(new CardResponseDTO());
 
-        cardService.updateCard(accountId.toString(), cardUpdateDTO);
+        cardService.updateCard(accountId.toString(), cardUpdate);
 
-        verify(cardMapper).updateCardFromDto(cardUpdateDTO, existingCard);
         verify(cardRepository).save(existingCard);
-        verify(cardMapper).cardToResponseDto(existingCard);
+        verify(cardMapper).updateCardFromCardUpdate(cardUpdate, existingCard);
 
     }
 
@@ -101,10 +99,14 @@ public class CardServiceTest {
         UUID nonExistentId = UUID.randomUUID();
         CardUpdateDTO cardUpdateDTO = CardUpdateDTO.builder().active("false").build();
 
+        CardUpdate cardUpdate = CardUpdate.builder()
+                                          .active(false)
+                                          .build();
+
         when(cardRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            cardService.updateCard(nonExistentId.toString(), cardUpdateDTO);
+            cardService.updateCard(nonExistentId.toString(), cardUpdate);
         });
 
         assertThat(exception.getMessage()).contains("Failed to update card");

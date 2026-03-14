@@ -2,7 +2,6 @@ package com.example.card_management_system.repository;
 
 import com.example.card_management_system.entity.Card;
 import com.example.card_management_system.entity.Card.CardType;
-import com.example.card_management_system.entity.Customer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,13 +22,8 @@ class CardRepositoryTest {
     @Autowired
     private CardRepository cardRepository;
 
-    @Autowired
-    private CustomerRepository customerRepository;
-
-
     private Card testCard;
     private Card testCard_2;
-    private Customer testCustomer;
 
     @BeforeEach
     public void setUp() {
@@ -40,20 +34,6 @@ class CardRepositoryTest {
         UUID accountNumber = UUID.randomUUID();
         UUID accountNumber2 = UUID.randomUUID();
 
-        testCustomer = Customer.builder()
-                .customerId(customerId)
-                .firstName("firstname")
-                .lastName("lastname")
-                .middleInitial("E")
-                .emailAddress("nnn@gmail.com")
-                .phoneNumber("123123123121332")
-                .phoneType(Customer.PhoneType.MOBILE)
-                .addressLine1("Street")
-                .addressLine2("apt")
-                .cityName("chi")
-                .state("IL")
-                .zipcode("60606")
-                .build();
 
         testCard = Card.builder()
                 .accountId(cardId)
@@ -65,7 +45,7 @@ class CardRepositoryTest {
                 .creditLimit(BigDecimal.valueOf(2000.00))
                 .securityCode("234")
                 .active(true)
-                .customer(testCustomer)
+                .customerId(customerId)
                 .build();
 
         //Save another card for the same customer
@@ -79,10 +59,9 @@ class CardRepositoryTest {
                 .creditLimit(BigDecimal.valueOf(2000.00))
                 .securityCode("234")
                 .active(true)
-                .customer(testCustomer)
+                .customerId(customerId)
                 .build();
 
-        customerRepository.save(testCustomer);
         cardRepository.save(testCard);
         cardRepository.save(testCard_2);
     }
@@ -90,7 +69,6 @@ class CardRepositoryTest {
     @AfterEach
     public void tearDown() {
         // Release test data after each test method
-        customerRepository.delete(testCustomer);
         cardRepository.delete(testCard);
         cardRepository.delete(testCard_2);
     }
@@ -107,14 +85,14 @@ class CardRepositoryTest {
     @Test
     void givenCard_whenFindByCustomerIdCalled_thenCardIsFound() {
 
-        List<Card> cards = cardRepository.findByCustomer_CustomerId(testCustomer.getCustomerId());
+        List<Card> cards = cardRepository.findByCustomerId(testCard.getCustomerId());
 
 
         assertThat(cards).isNotEmpty();
         assertThat(cards).hasSize(2);
         assertThat(cards)
                 .allSatisfy(c -> {
-                    assertThat(c.getCustomer().getCustomerId()).isEqualTo(testCustomer.getCustomerId());
+                    assertThat(c.getCustomerId()).isEqualTo(testCard.getCustomerId());
                     assertThat(c.getCardHolderName()).isEqualTo("card holder name");
                     assertThat(c.getExpiryDate()).isEqualTo(LocalDate.of(2026, 2, 7));
                 });

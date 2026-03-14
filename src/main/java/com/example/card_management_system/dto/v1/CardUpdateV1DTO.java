@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CardUpdateV1DTO {
     private String active;
-    private String creditLimit; //BigDecimal??
+    private String creditLimit;
     @Size(min=6,max=6, message= "Expiry date must be of length 6 in YYYYMM format")
     @FutureExpiry
     private String expiryDate;

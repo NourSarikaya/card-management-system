@@ -155,14 +155,14 @@ public class CardServiceTest {
         CardResponseDTO cardResponseDTO = CardResponseDTO.builder().customerId(customerId.toString()).build();
 
 
-        when(cardRepository.findByCustomer_CustomerId(customerId)).thenReturn(cardList);
+        when(cardRepository.findByCustomerId(customerId)).thenReturn(cardList);
         when(cardMapper.cardToResponseDto(any(Card.class))).thenReturn(cardResponseDTO);
 
         List<CardResponseDTO> results = cardService.getAllCardsByCustomerId(customerId.toString());
 
         assertThat(results).isNotNull().hasSize(2).allMatch(dto -> dto.getCustomerId().equals(customerId.toString()));
 
-        verify(cardRepository).findByCustomer_CustomerId(customerId);
+        verify(cardRepository).findByCustomerId(customerId);
         verify(cardMapper, times(2)).cardToResponseDto(any());
     }
 
@@ -170,14 +170,14 @@ public class CardServiceTest {
     void givenACustomerWithNoCards_whenGetAllCardsByCustomerIdCalled_thenThrowException() {
         UUID customerId = UUID.randomUUID();
 
-        when(cardRepository.findByCustomer_CustomerId(customerId)).thenReturn(List.of());
+        when(cardRepository.findByCustomerId(customerId)).thenReturn(List.of());
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             cardService.getAllCardsByCustomerId(customerId.toString());
         });
 
         assertTrue(exception.getMessage().contains("No cards found for customer"));
-        verify(cardRepository, times(1)).findByCustomer_CustomerId(customerId);
+        verify(cardRepository, times(1)).findByCustomerId(customerId);
         verifyNoInteractions(cardMapper);
     }
 }

@@ -71,7 +71,7 @@ public class CardService {
     public List<CardResponseDTO> getAllCardsByCustomerId(String customerId) {
         UUID customerUuid = UUIDUtils.toUUID(customerId);
 
-        List<Card> cardList = cardRepository.findByCustomer_CustomerId(customerUuid);
+        List<Card> cardList = cardRepository.findByCustomerId(customerUuid);
 
         if (cardList.isEmpty()) {
             throw new RuntimeException("No cards found for customer: " + customerId);

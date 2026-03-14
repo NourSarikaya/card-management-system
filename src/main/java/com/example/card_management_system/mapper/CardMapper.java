@@ -19,7 +19,7 @@ import java.time.format.DateTimeParseException;
 public interface CardMapper {
 
     @Mappings({
-            @Mapping(source = "customer.customerId", target = "customerId"),
+//            @Mapping(source = "customer.customerId", target = "customerId"),
             @Mapping(target = "expiryDate", dateFormat = "yyyyMM")
 
     })
@@ -28,7 +28,7 @@ public interface CardMapper {
 
     @Mappings({
             @Mapping(target = "expiryDate", expression = "java(mapStringToLastDay(dto.getExpiryDate()))"),
-            @Mapping(target = "customer.customerId", source = "customerId")
+//            @Mapping(target = "customer.customerId", source = "customerId")
     })
     Card requestDtoToCard(CreateCardRequestDTO dto);
 
@@ -45,7 +45,7 @@ public interface CardMapper {
 
     //V1 DTOs
     @Mappings({
-            @Mapping(source = "customer.customerId", target = "customerId"),
+//            @Mapping(source = "customer.customerId", target = "customerId"),
             @Mapping(target = "expiryDate", dateFormat = "yyyyMM")
 
     })
@@ -53,7 +53,7 @@ public interface CardMapper {
 
     @Mappings({
             @Mapping(target = "expiryDate", expression = "java(mapStringToLastDay(dto.getExpiryDate()))"),
-            @Mapping(target = "customer.customerId", source = "customerId")
+//            @Mapping(target = "customer.customerId", source = "customerId")
     })
     Card requestV1DtoToCard(CreateCardRequestV1DTO dto);
 

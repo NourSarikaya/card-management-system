@@ -4,7 +4,6 @@ import com.example.card_management_system.dto.CardResponseDTO;
 import com.example.card_management_system.dto.CardUpdateDTO;
 import com.example.card_management_system.dto.CreateCardRequestDTO;
 import com.example.card_management_system.entity.Card;
-import com.example.card_management_system.entity.Customer;
 import com.example.card_management_system.util.UUIDUtils;
 import org.junit.jupiter.api.Test;
 
@@ -23,9 +22,6 @@ public class CardMapperTest {
         UUID cardId = UUID.randomUUID();
         UUID customerId = UUID.randomUUID();
 
-        Customer mockCustomer = new Customer();
-        mockCustomer.setCustomerId(customerId);
-
         Card card = Card.builder()
                         .accountId(cardId)
                         .cardNumber("1234123412341234")
@@ -35,7 +31,7 @@ public class CardMapperTest {
                         .active(true)
                         .creditLimit(new BigDecimal("3000.50"))
                         .securityCode("123")
-                        .customer(mockCustomer)
+                        .customerId(customerId)
                         .build();
 
         CardResponseDTO result = cardMapper.cardToResponseDto(card);
@@ -74,8 +70,7 @@ public class CardMapperTest {
         assertThat(result.getExpiryDate()).isEqualTo(LocalDate.of(2029, 12, 31));
         assertThat(result.getCardHolderName()).isEqualTo(createCardRequestDTO.getCardHolderName());
         assertThat(result.getCreditLimit()).isEqualTo(createCardRequestDTO.getCreditLimit());
-        assertThat(result.getCustomer()
-                         .getCustomerId()).isEqualTo(UUIDUtils.toUUID(createCardRequestDTO.getCustomerId()));
+        assertThat(result.getCustomerId()).isEqualTo(UUIDUtils.toUUID(createCardRequestDTO.getCustomerId()));
     }
 
     @Test
@@ -99,8 +94,7 @@ public class CardMapperTest {
         assertThat(result.getCardNumber()).isEqualTo(createCardRequestDTO.getCardNumber());
         assertThat(result.getExpiryDate()).isNull();
         assertThat(result.getCardHolderName()).isEqualTo(createCardRequestDTO.getCardHolderName());
-        assertThat(result.getCustomer()
-                         .getCustomerId()).isEqualTo(UUIDUtils.toUUID(createCardRequestDTO.getCustomerId()));
+        assertThat(result.getCustomerId()).isEqualTo(UUIDUtils.toUUID(createCardRequestDTO.getCustomerId()));
     }
 
     @Test

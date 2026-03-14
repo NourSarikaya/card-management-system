@@ -8,7 +8,6 @@ import com.example.card_management_system.dto.v1.CardUpdateV1DTO;
 import com.example.card_management_system.dto.v1.CreateCardRequestV1DTO;
 import com.example.card_management_system.entity.Card;
 import com.example.card_management_system.entity.CardUpdate;
-import com.example.card_management_system.entity.Customer;
 import com.example.card_management_system.mapper.CardMapper;
 import com.example.card_management_system.service.CardService;
 import com.example.card_management_system.util.UUIDUtils;
@@ -46,15 +45,17 @@ class CardManagementControllerTest {
     private CreateCardRequestV1DTO cardRequestV1;
     private CardResponseV1DTO expectedResponseV1;
     private Card card;
-    private Customer customer;
+    private UUID customerId;
 
 
     @BeforeEach
     public void setUp() {
+        customerId = UUID.fromString("561eed14-b0e4-45ec-9e6f-dc5b4238ee57");
+
         cardRequest = CreateCardRequestDTO.builder()
                                           .cardNumber("1234123412341234")
                                           .cardType("CREDIT")
-                                          .customerId("561eed14-b0e4-45ec-9e6f-dc5b4238ee57")
+                                          .customerId(customerId.toString())
                                           .creditLimit("3000")
                                           .cardHolderName("cardholdername").build();
 
@@ -83,10 +84,8 @@ class CardManagementControllerTest {
                                               .digitalCardOnly("false")
                                               .cardHolderName("cardholdername").build();
 
-        customer = Customer.builder().customerId(UUIDUtils.toUUID("561eed14-b0e4-45ec-9e6f-dc5b4238ee57")).build();
-
         card = Card.builder().cardNumber("1234123412341234").cardType(Card.CardType.valueOf("CREDIT"))
-                   .customer(customer)
+                   .customerId(customerId)
                    .accountId(UUIDUtils.toUUID("550e8400-e29b-41d4-a716-446655440000"))
                    .creditLimit(BigDecimal.valueOf(3000))
                    .cardHolderName("cardholdername").build();
@@ -120,7 +119,7 @@ class CardManagementControllerTest {
                                                                  .cardHolderName("cardholdername").build();
 
         Card updatedCard = Card.builder().cardNumber("1234123412341234").cardType(Card.CardType.valueOf("CREDIT"))
-                               .customer(customer)
+                               .customerId(customerId)
                                .accountId(UUIDUtils.toUUID("550e8400-e29b-41d4-a716-446655440000"))
                                .creditLimit(BigDecimal.valueOf(6500))
                                .cardHolderName("cardholdername").build();
@@ -189,7 +188,7 @@ class CardManagementControllerTest {
                                                                      .cardHolderName("cardholdername").build();
 
         Card updatedCard = Card.builder().cardNumber("1234123412341234").cardType(Card.CardType.valueOf("CREDIT"))
-                               .customer(customer)
+                               .customerId(customerId)
                                .accountId(UUIDUtils.toUUID("550e8400-e29b-41d4-a716-446655440000"))
                                .creditLimit(BigDecimal.valueOf(6500))
                                .cardHolderName("cardholdername").build();

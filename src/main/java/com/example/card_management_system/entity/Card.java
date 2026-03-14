@@ -63,9 +63,8 @@ public class Card {
     @Column(name = "daily_limit")
     private BigDecimal dailyLimit;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @Column(name = "customer_id", nullable = false)
+    private UUID customerId;
 
 
     //CARD TYPE ENUM

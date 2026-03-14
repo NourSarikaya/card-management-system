@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface CardRepository extends JpaRepository<Card, UUID> {
 
-    List<Card> findByCustomer_CustomerId(UUID customerId);
+    List<Card> findByCustomerId(UUID customerId);
 
 }

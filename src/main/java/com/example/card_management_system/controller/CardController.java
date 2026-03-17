@@ -89,10 +89,12 @@ public class CardController {
     public ResponseEntity<List<CardResponseDTO>> getAllCardsByCustomerId(@PathVariable String customerId) {
         log.info("GET /cards/{}/cards- retrieving all cards", customerId);
 
-        List<CardResponseDTO> retrievedCards = cardService.getAllCardsByCustomerId(customerId);
+        List<Card> retrievedCards = cardService.getAllCardsByCustomerId(customerId);
+
+        List<CardResponseDTO> cardReponseDTOS = retrievedCards.stream().map(cardMapper::cardToResponseDto).toList();
 
         log.info("GET /cards/{}/cards- successfully retrieved all cards", customerId);
-        return ResponseEntity.ok(retrievedCards);
+        return ResponseEntity.ok(cardReponseDTOS);
     }
 
     // V1 ENDPOINTS
@@ -152,12 +154,16 @@ public class CardController {
 
     @GetMapping("/v1/{customerId}/all")
     @Operation(security = @SecurityRequirement(name = "bearerAuth"), tags = {"card-controller-V1"})
-    public ResponseEntity<List<CardResponseDTO>> getAllCardsByCustomerIdV1(@PathVariable String customerId) {
+    public ResponseEntity<List<CardResponseV1DTO>> getAllCardsByCustomerIdV1(@PathVariable String customerId) {
         log.info("GET /v1/{}/all- retrieving all cards", customerId);
 
-        List<CardResponseDTO> retrievedCards = cardService.getAllCardsByCustomerId(customerId);
+        List<Card> retrievedCards = cardService.getAllCardsByCustomerId(customerId);
+
+        List<CardResponseV1DTO> cardResponseV1DTOS = retrievedCards.stream()
+                                                                   .map(cardMapper::cardToResponseV1Dto)
+                                                                   .toList();
 
         log.info("GET /v1/{}/all- successfully retrieved all cards", customerId);
-        return ResponseEntity.ok(retrievedCards);
+        return ResponseEntity.ok(cardResponseV1DTOS);
     }
 }

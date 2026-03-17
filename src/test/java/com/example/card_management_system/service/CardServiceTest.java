@@ -148,22 +148,22 @@ public class CardServiceTest {
     @Test
     void givenAValidCustomerId_whenGetAllCardsByCustomerIdCalled_thenReturnCardResponseList() {
         UUID customerId = UUID.randomUUID();
-        Card card = Card.builder().accountId(customerId).build();
-        Card card2 = Card.builder().accountId(customerId).build();
+        UUID accountId = UUID.randomUUID();
+        Card card = Card.builder().accountId(accountId).customerId(customerId).build();
+        Card card2 = Card.builder().accountId(accountId).customerId(customerId).build();
 
         List<Card> cardList = List.of(card, card2);
         CardResponseDTO cardResponseDTO = CardResponseDTO.builder().customerId(customerId.toString()).build();
 
 
         when(cardRepository.findByCustomerId(customerId)).thenReturn(cardList);
-        when(cardMapper.cardToResponseDto(any(Card.class))).thenReturn(cardResponseDTO);
 
-        List<CardResponseDTO> results = cardService.getAllCardsByCustomerId(customerId.toString());
+        List<Card> results = cardService.getAllCardsByCustomerId(customerId.toString());
 
-        assertThat(results).isNotNull().hasSize(2).allMatch(dto -> dto.getCustomerId().equals(customerId.toString()));
+        assertThat(results).isNotNull().hasSize(2);
 
         verify(cardRepository).findByCustomerId(customerId);
-        verify(cardMapper, times(2)).cardToResponseDto(any());
+        verify(cardRepository, times(1)).findByCustomerId(customerId);
     }
 
     @Test

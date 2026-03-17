@@ -68,7 +68,7 @@ public class CardService {
         }
     }
 
-    public List<CardResponseDTO> getAllCardsByCustomerId(String customerId) {
+    public List<Card> getAllCardsByCustomerId(String customerId) {
         UUID customerUuid = UUIDUtils.toUUID(customerId);
 
         List<Card> cardList = cardRepository.findByCustomerId(customerUuid);
@@ -77,9 +77,7 @@ public class CardService {
             throw new RuntimeException("No cards found for customer: " + customerId);
         }
 
-        return cardList.stream()
-                       .map(cardMapper::cardToResponseDto)
-                       .toList();
+        return cardList;
     }
 
     public void deleteCard(String accountId) {

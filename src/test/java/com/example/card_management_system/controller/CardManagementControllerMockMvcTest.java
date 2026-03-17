@@ -196,6 +196,34 @@ class CardManagementControllerMockMvcTest {
     }
 
     @Test
+    void shouldDeleteCard_GivenValidAccountIdV1() throws Exception {
+        //Create the card to be retrieved from the repository
+        UUID accountId = UUID.randomUUID();
+        UUID customerId = UUID.randomUUID();
+
+        Card testCard = Card.builder()
+                            .accountId(accountId)
+                            .cardNumber("6011111111111117")
+                            .cardType(Card.CardType.CREDIT)
+                            .cardHolderName("card holder name")
+                            .expiryDate(LocalDate.of(2026, 2, 7))
+                            .creditLimit(BigDecimal.valueOf(2000.00))
+                            .securityCode("234")
+                            .active(true)
+                            .customerId(customerId)
+                            .build();
+
+        cardRepository.save(testCard);
+
+        mockMvc.perform(delete("/api/cards/v1/remove/{accountId}", testCard.getAccountId())
+                       .with(jwt().jwt(builder -> builder.subject("test-user"))
+                                  .authorities(new SimpleGrantedAuthority("SCOPE_ROLE_CLIENT"))))
+               .andDo(print())
+               .andExpect(status().isNoContent());
+
+    }
+
+    @Test
     void shouldRetrieveAllCards_GivenValidCustomerId() throws Exception {
         //Create cards to be retrieved from the repository
         UUID accountId = UUID.randomUUID();
@@ -232,6 +260,51 @@ class CardManagementControllerMockMvcTest {
         cardRepository.save(testCard_2);
 
         mockMvc.perform(get("/api/cards/{customerId}/all", customerId)
+                       .with(jwt().jwt(builder -> builder.subject("test-user"))
+                                  .authorities(new SimpleGrantedAuthority("SCOPE_ROLE_CLIENT"))))
+               .andExpect(status().isOk())
+               .andDo(print());
+
+
+    }
+
+    @Test
+    void shouldRetrieveAllCards_GivenValidCustomerIdV1() throws Exception {
+        //Create cards to be retrieved from the repository
+        UUID accountId = UUID.randomUUID();
+        UUID accountId_2 = UUID.randomUUID();
+        UUID customerId = UUID.randomUUID();
+
+        Card testCard = Card.builder()
+                            .accountId(accountId)
+                            .accountNumber(UUID.randomUUID())
+                            .cardNumber("6011111111111117")
+                            .cardType(Card.CardType.CREDIT)
+                            .cardHolderName("card holder name")
+                            .expiryDate(LocalDate.of(2026, 2, 7))
+                            .creditLimit(BigDecimal.valueOf(2000.00))
+                            .securityCode("234")
+                            .active(true)
+                            .customerId(customerId)
+                            .build();
+
+        Card testCard_2 = Card.builder()
+                              .accountId(accountId_2)
+                              .accountNumber(UUID.randomUUID())
+                              .cardNumber("4111111111111111")
+                              .cardType(Card.CardType.CREDIT)
+                              .cardHolderName("card holder name")
+                              .expiryDate(LocalDate.of(2026, 2, 7))
+                              .creditLimit(BigDecimal.valueOf(2000.00))
+                              .securityCode("234")
+                              .active(true)
+                              .customerId(customerId)
+                              .build();
+
+        cardRepository.save(testCard);
+        cardRepository.save(testCard_2);
+
+        mockMvc.perform(get("/api/cards/v1/{customerId}/all", customerId)
                        .with(jwt().jwt(builder -> builder.subject("test-user"))
                                   .authorities(new SimpleGrantedAuthority("SCOPE_ROLE_CLIENT"))))
                .andExpect(status().isOk())

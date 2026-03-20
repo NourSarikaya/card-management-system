@@ -1,6 +1,7 @@
 package com.example.card_management_system.service;
 
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Profile("!test")
 public class JwtService {
 
     private final JwtEncoder encoder;
